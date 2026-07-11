@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>焦虑日记 - 静心</title>
+<style>
+:root{--color-bg-primary:#FFF8F0;--color-bg-secondary:#FFF1E6;--color-bg-card:#FFFFFF;--color-bg-input:#FFFBF7;--color-accent:#E8906A;--color-accent-light:#F5C4A6;--color-accent-dark:#C5704A;--color-green:#A3B5A6;--color-green-dark:#7A8F7D;--color-text-primary:#4A3F38;--color-text-secondary:#8C7F74;--color-text-muted:#B5A99E;--color-text-inverse:#FFFBF7;--color-anxiety-low:#A3B5A6;--color-anxiety-med:#E8C96A;--color-anxiety-high:#E8906A;--color-anxiety-severe:#D4686A;--font-sans:'Segoe UI','Microsoft YaHei',sans-serif;--font-serif:'Noto Serif SC','SimSun','Georgia',serif;--font-size-xs:0.75rem;--font-size-sm:0.875rem;--font-size-base:1rem;--font-size-md:1.125rem;--font-size-lg:1.375rem;--font-size-xl:1.75rem;--font-size-xxl:2.25rem;--font-weight-normal:400;--font-weight-medium:500;--font-weight-semibold:600;--line-height-tight:1.3;--line-height-normal:1.6;--line-height-relaxed:1.8;--space-xs:0.5rem;--space-sm:0.75rem;--space-md:1rem;--space-lg:1.5rem;--space-xl:2rem;--space-xxl:3rem;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-full:9999px;--shadow-xs:0 1px 2px rgba(74,63,56,0.04);--shadow-sm:0 2px 8px rgba(74,63,56,0.06);--shadow-md:0 4px 16px rgba(74,63,56,0.08);--shadow-glow-amber:0 0 24px rgba(232,144,106,0.25);--transition-fast:150ms ease;--transition-normal:300ms ease;--transition-slow:500ms ease}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:var(--font-size-base);color:var(--color-text-primary);background:var(--color-bg-primary);overflow-y:auto;padding:16px;max-width:480px;margin:0 auto}
+h2{font-family:var(--font-serif);text-align:center;margin-bottom:8px}
+h3{font-family:var(--font-sans);font-size:var(--font-size-md);margin-bottom:var(--space-md);color:var(--color-text-secondary);font-weight:var(--font-weight-normal)}
+textarea{font-family:var(--font-sans);font-size:var(--font-size-base);color:var(--color-text-primary);background:var(--color-bg-input);border:1px solid var(--color-text-muted);border-radius:var(--radius-md);padding:var(--space-sm) var(--space-md);line-height:var(--line-height-normal);width:100%;resize:none;min-height:120px}
+textarea:focus{border-color:var(--color-accent);box-shadow:0 0 0 3px rgba(232,144,106,0.12);outline:none}
+::placeholder{color:var(--color-text-muted);font-style:italic}
+button{font-family:var(--font-sans);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);cursor:pointer;border:none;border-radius:var(--radius-md);padding:var(--space-xs) var(--space-lg);transition:all var(--transition-fast)}
+.btn-primary{background:var(--color-accent);color:var(--color-text-inverse);padding:var(--space-sm) var(--space-xl);border-radius:var(--radius-lg)}
+.btn-secondary{background:transparent;color:var(--color-accent);border:1.5px solid var(--color-accent);border-radius:var(--radius-lg)}
+.text-muted{color:var(--color-text-muted);font-size:var(--font-size-sm)}
+.cbt-guide{text-align:center;margin-bottom:var(--space-lg)}
+.step-badge{display:inline-block;font-size:var(--font-size-xs);color:var(--color-accent);background:rgba(232,144,106,0.1);padding:2px 12px;border-radius:var(--radius-full);margin-bottom:var(--space-sm)}
+.cbt-explain{font-size:var(--font-size-sm);color:var(--color-text-muted)}
+.cbt-card{background:var(--color-bg-card);border-radius:var(--radius-md);padding:var(--space-md);margin-bottom:var(--space-md);box-shadow:var(--shadow-xs)}
+.cbt-label{display:block;font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);color:var(--color-text-primary);margin-bottom:var(--space-sm)}
+.cbt-hint{font-size:var(--font-size-xs);color:var(--color-text-muted);margin-top:var(--space-xs)}
+.step-indicators{display:flex;align-items:center;justify-content:center;margin-bottom:var(--space-lg)}
+.step{width:32px;height:32px;border-radius:50%;background:var(--color-bg-secondary);border:2px solid var(--color-text-muted);display:flex;align-items:center;justify-content:center;font-size:var(--font-size-xs);font-weight:var(--font-weight-semibold);color:var(--color-text-muted);transition:all var(--transition-normal)}
+.step.active{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-text-inverse);box-shadow:var(--shadow-glow-amber)}
+.step.done{background:var(--color-green);border-color:var(--color-green);color:var(--color-text-inverse)}
+.step-line{width:24px;height:2px;background:var(--color-text-muted);margin:0 2px;transition:background var(--transition-normal)}
+.step-line.done{background:var(--color-green)}
+.step-nav{display:flex;gap:var(--space-md);margin-top:var(--space-lg)}
+.step-nav button{flex:1}
+.anxiety-slider-container{text-align:center;padding:var(--space-sm) 0}
+.anxiety-level-display{font-size:var(--font-size-xxl);font-weight:var(--font-weight-semibold);font-family:var(--font-serif);margin:var(--space-sm) 0;transition:color var(--transition-fast)}
+.anxiety-slider{width:100%;-webkit-appearance:none;appearance:none;height:8px;border-radius:var(--radius-full);background:linear-gradient(to right,var(--color-anxiety-low) 0%,var(--color-anxiety-med) 33%,var(--color-anxiety-high) 66%,var(--color-anxiety-severe) 100%);outline:none}
+.anxiety-slider::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:white;border:3px solid var(--color-accent);cursor:pointer;box-shadow:var(--shadow-sm)}
+.anxiety-labels{display:flex;justify-content:space-between;margin-top:var(--space-xs);font-size:var(--font-size-xs);color:var(--color-text-muted)}
+.emotion-tags{display:flex;flex-wrap:wrap;gap:4px}
+.emotion-tag{display:inline-block;padding:4px 12px;border-radius:var(--radius-full);font-size:var(--font-size-sm);background:var(--color-bg-secondary);color:var(--color-text-secondary);cursor:pointer;transition:all var(--transition-fast);border:1.5px solid transparent;user-select:none}
+.emotion-tag.selected{background:rgba(232,144,106,0.15);color:var(--color-accent-dark);border-color:var(--color-accent-light);font-weight:var(--font-weight-medium)}
+.cbt-self-note{background:linear-gradient(135deg,#FFFBF7 0%,#FFF8F0 100%);border:1px solid rgba(232,144,106,0.15)}
+.self-note-header{display:flex;align-items:center;gap:var(--space-xs);font-weight:var(--font-weight-semibold);color:var(--color-accent-dark);margin-bottom:var(--space-sm)}
+.self-note-textarea{min-height:200px!important;font-family:var(--font-serif);line-height:var(--line-height-relaxed);background:transparent!important;border:none!important}
+.cbt-soothe-card{background:var(--color-bg-card);border-radius:var(--radius-md);padding:var(--space-lg);margin-top:var(--space-md);border-left:4px solid var(--color-accent);box-shadow:var(--shadow-xs)}
+.soothe-text{font-family:var(--font-serif);font-size:var(--font-size-md);color:var(--color-text-primary);line-height:var(--line-height-relaxed);font-style:italic}
+.completion-card{text-align:center;padding:var(--space-xxl) var(--space-md);background:var(--color-bg-secondary);border-radius:var(--radius-lg)}
+.completion-icon{font-size:56px;margin-bottom:var(--space-md)}
+.completion-card h3{font-family:var(--font-serif);color:var(--color-green-dark)}
+.completion-quote{margin-top:var(--space-lg);padding:var(--space-md);background:white;border-radius:var(--radius-md);display:inline-block}
+.completion-quote p{font-family:var(--font-serif);font-style:italic;color:var(--color-accent-dark)}
+.fade-in{animation:fadeIn var(--transition-normal) ease forwards}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.analysis-card{border-left:4px solid var(--color-accent)!important}
+.analysis-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.analysis-icon{font-size:20px}.analysis-name{font-weight:600;font-size:15px;color:var(--color-accent-dark)}
+.analysis-desc{font-size:13px;color:var(--color-text-secondary);margin-bottom:4px}
+.analysis-explain{font-size:12px;color:var(--color-green-dark)}
+</style>
+</head>
+<body>
+
+<h2>🌿 焦虑日记</h2>
+<p class="text-muted" style="text-align:center;margin-bottom:16px">5步CBT引导 · 把焦虑变成成长</p>
+
+<div class="step-indicators" id="steps">
+  <div class="step active"><span>1</span></div><div class="step-line"></div>
+  <div class="step"><span>2</span></div><div class="step-line"></div>
+  <div class="step"><span>3</span></div><div class="step-line"></div>
+  <div class="step"><span>4</span></div><div class="step-line"></div>
+  <div class="step"><span>5</span></div>
+</div>
+
+<div id="content"></div>
+<div class="step-nav" id="nav"></div>
+
+<script>
+// ===== DATA =====
+const EMOTIONS = ['焦虑','恐惧','担忧','烦躁','不安','无助','沮丧','愤怒','自责','疲惫','孤独','迷茫','自卑','紧张','失落'];
+const SOOTHE = {
+  1:'轻轻的波动。你已经有了觉察，这就是成长的开始。',
+  2:'小小的不安。你完全有能力把它变成前行的动力。',
+  3:'轻微的焦虑是成长的信号。它在提醒你什么对你重要。',
+  4:'这些情绪是你内心深处在乎的东西在说话。听一听，然后往前走。',
+  5:'这种不舒服其实是你在突破舒适区。回头看时会感谢现在的自己。',
+  6:'你的感受很重要，但它不定义你。每一次面对，你都在变强。',
+  7:'真的很难，但你在这里面对它，这本身就证明了你有多勇敢。',
+  8:'痛苦是暂时的，而你从中获得的力量是永久的。',
+  9:'我知道这很难。你比自己想象的更坚韧，这次经历会让你成长。',
+  10:'这是最不舒服的时刻，也是最大的成长机会。你已经迈出了最重要的一步。'
+};
+const QUOTES = ['使你成长的不是焦虑本身，而是你选择面对它的勇气。','每一次不舒服，都是成长的信号。你在变好。','回头看时你会发现：这些经历让你更了解自己。','你不是在逃避，你是在学习。这就是成长。','今天比昨天多了解自己一点，这就是胜利。'];
+
+// ===== STATE =====
+let step = 1;
+const TOTAL = 5;
+const data = { worry:'', anxietyLevel:5, emotions:[], evidence:{forThought:'',againstThought:'',alternatives:'',factVsFeeling:'',observerView:''}, reframe:{balancedThought:'',actionPlan:'',growthInsight:'',futureSelf:'',friendAdvice:'',aiAnalysis:''}, _selfNote:'' };
+
+// ===== HELPERS =====
+const $ = id => document.getElementById(id);
+const esc = s => { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; };
+const colors = l => ({1:'var(--color-anxiety-low)',2:'var(--color-anxiety-low)',3:'var(--color-anxiety-low)',4:'var(--color-anxiety-med)',5:'var(--color-anxiety-med)',6:'var(--color-anxiety-med)',7:'var(--color-anxiety-high)',8:'var(--color-anxiety-high)',9:'var(--color-anxiety-severe)',10:'var(--color-anxiety-severe)'})[l];
+
+// ===== 认知扭曲分析引擎 =====
+function analyzeDistortions(text) {
+  if (!text || text.length < 5) return [];
+  const found = [];
+  const patterns = [
+    { name: '灾难化', icon: '🌪️', desc: '把事情的后果想得比实际情况严重得多', explain: '你的大脑正在放大最坏的可能性。试着问自己：最坏情况真的会发生吗？概率有多大？', rules: [/完蛋|毁了|完了|无法承受|活不下去|最可怕|极其严重/] },
+    { name: '读心术', icon: '🔮', desc: '假设自己知道别人在想什么（通常是负面的）', explain: '你无法真正知道别人心里怎么想。与其猜测，不如直接沟通，或者接受"不确定"本身。', rules: [/TA.{0,3}(一定|肯定|绝对|必然|就是)/, /(觉得我|认为我|看我|讨厌我|嫌弃我|笑话我)/] },
+    { name: '非黑即白', icon: '⚫⚪', desc: '把事情看成非好即坏，没有中间地带', explain: '现实世界大多数事情在灰色地带。不完美≠失败，有缺点≠不够好。', rules: [/必须|绝对要|否则就|要么.*要么|不.*就/] },
+    { name: '过度概括', icon: '🔁', desc: '从单一事件得出广泛结论', explain: '一次不代表永远，一件事不代表全部。试着限定在具体情境中看问题。', rules: [/总是|从来不|每次|从来没|回回|一辈子/] },
+    { name: '情绪推理', icon: '💭', desc: '把感受当作事实："我感觉不好，所以事情一定很糟"', explain: '感受不等于事实。焦虑是一种情绪，不是对现实的准确判断。', rules: [/我感觉.{0,5}(所以|一定|肯定)|我害怕.{0,5}所以|我焦虑.{0,5}所以/] },
+    { name: '个人化', icon: '🎯', desc: '把所有责任都归咎于自己', explain: '很多事情不是单方面的。试着分清你的责任和别人的责任，把不属于你的那部分还回去。', rules: [/都是我|怪我|是我的错|我不够|我不配|我太差/] },
+    { name: '负面过滤', icon: '🔍', desc: '只看到负面信息，忽略积极因素', explain: '你的注意力被焦虑劫持了。试着刻意找出三个积极的信号或可能。', rules: [/只看到|全都是坏的|一点好的都没有|完全没有|什么都没有/] },
+  ];
+
+  for (const p of patterns) {
+    let matched = false;
+    for (const rule of p.rules) {
+      if (rule.test(text)) { matched = true; break; }
+    }
+    if (matched) found.push(p);
+  }
+  return found;
+}
+
+function updateSteps(){
+  document.querySelectorAll('#steps .step').forEach((s,i)=>{
+    s.classList.remove('active','done');
+    if(i+1<step) s.classList.add('done');
+    if(i+1===step) s.classList.add('active');
+  });
+  document.querySelectorAll('.step-line').forEach((l,i)=>{ l.classList.toggle('done',i+1<step); });
+}
+
+function renderNav(){
+  if(step==='3.5') return; // 分析页自己处理按钮
+  let h='';
+  if(step>1) h+=`<button class="btn-secondary" id="btn-prev">← 上一步</button>`;
+  if(step<TOTAL) h+=`<button class="btn-primary" id="btn-next" style="margin-left:auto">下一步 →</button>`;
+  else h+=`<button class="btn-primary" id="btn-save" style="margin-left:auto">💾 保存</button>`;
+  $('nav').innerHTML=h;
+  const pb=$('btn-prev'), nb=$('btn-next'), sb=$('btn-save');
+  if(pb) pb.onclick=()=>{ step--; render(); };
+  if(nb) nb.onclick=()=>{ if(step===3){step='3.5'}else{step++}; render(); };
+  if(sb) sb.onclick=save;
+}
+
+// ===== RENDER =====
+function render(){
+  updateSteps();
+  switch(step){
+    case 1: // 自动思维
+      $('content').innerHTML=`
+        <div class="cbt-guide"><span class="step-badge">第1步/共5步</span><h3>💭 捕捉自动思维</h3><p class="cbt-explain">先不做评判，把脑海里冒出的想法写下来。</p></div>
+        <div class="cbt-card"><label class="cbt-label">这时候，我心里在想什么？</label>
+        <textarea id="inp-worry" placeholder="比如：我担心明天的演讲会搞砸...">${esc(data.worry)}</textarea>
+        <p class="cbt-hint">💡 试着写下脑海里的原话，不用修饰</p></div>`;
+      $('inp-worry').oninput=e=>{ data.worry=e.target.value; };
+      break;
+    case 2: // 情绪识别
+      const tags=EMOTIONS.map(em=>`<span class="emotion-tag${data.emotions.includes(em)?' selected':''}" data-em="${em}">${em}</span>`).join('');
+      $('content').innerHTML=`
+        <div class="cbt-guide"><span class="step-badge">第2步/共5步</span><h3>🎯 识别情绪</h3><p class="cbt-explain">给情绪命名，帮助大脑从"混乱"切换到"观察"。</p></div>
+        <div class="cbt-card"><label class="cbt-label">这种焦虑有多强烈？</label>
+        <div class="anxiety-slider-container"><div class="anxiety-level-display" style="color:${colors(data.anxietyLevel)}">${data.anxietyLevel}</div>
+        <input type="range" min="1" max="10" value="${data.anxietyLevel}" class="anxiety-slider" id="inp-level">
+        <div class="anxiety-labels"><span>一点点</span><span>无法承受</span></div></div></div>
+        <div class="cbt-card"><label class="cbt-label">我感受到了哪些情绪？（可多选）</label>
+        <div class="emotion-tags" id="emotion-tags">${tags}</div>
+        <p class="cbt-hint" id="emotion-hint">${data.emotions.length>0?'已选 '+data.emotions.length+' 个':'💡 点击标签选择'}</p></div>`;
+      $('inp-level').oninput=e=>{ data.anxietyLevel=parseInt(e.target.value); document.querySelector('.anxiety-level-display').textContent=data.anxietyLevel; document.querySelector('.anxiety-level-display').style.color=colors(data.anxietyLevel); };
+      document.querySelectorAll('.emotion-tag').forEach(t=>{ t.onclick=()=>{ const em=t.dataset.em; const i=data.emotions.indexOf(em); if(i>=0){data.emotions.splice(i,1);t.classList.remove('selected')}else{data.emotions.push(em);t.classList.add('selected')}; const h=$('emotion-hint'); if(h)h.textContent=data.emotions.length>0?'已选 '+data.emotions.length+' 个':'💡 点击标签选择'; }; });
+      break;
+    case 3: // 客观分析（增强版）
+      const w=data.worry?data.worry.substring(0,40)+'...':'这个想法';
+      $('content').innerHTML=`
+        <div class="cbt-guide"><span class="step-badge">第3步/共5步</span><h3>🔍 客观分析</h3><p class="cbt-explain">像一个冷静的侦探，不带情绪地审视「${w}」</p></div>
+
+        <div class="cbt-card"><label class="cbt-label">📋 支持这个想法的证据有哪些？（只写客观事实，不写感受）</label><textarea id="inp-for" placeholder="比如：确实有一次类似的事情发生了。老板的确皱了一下眉头。">${esc(data.evidence.forThought)}</textarea></div>
+
+        <div class="cbt-card"><label class="cbt-label">❌ 反对这个想法的证据有哪些？</label><textarea id="inp-against" placeholder="比如：之前五次类似情况都顺利通过了。老板今天对所有方案都皱了眉，不是针对我。">${esc(data.evidence.againstThought)}</textarea></div>
+
+        <div class="cbt-card"><label class="cbt-label">🔄 这件事还有其他可能的解释吗？</label><textarea id="inp-alt" placeholder="比如：TA没回复可能是太忙了，不一定是讨厌我。面试官表情严肃可能只是累了。">${esc(data.evidence.alternatives)}</textarea></div>
+
+        <div class="cbt-card" style="background:linear-gradient(135deg,#FFFBF7,rgba(163,181,166,0.06));border:1px solid rgba(163,181,166,0.15)"><label class="cbt-label">🏛️ 区分一下：哪些是客观事实，哪些是我的感受/猜测？</label><textarea id="inp-fact" placeholder="事实：TA没有回复我的消息。&#10;我的感受/猜测：TA讨厌我，故意不理我。&#10;&#10;把事实和猜测分开，往往能发现很多猜测缺乏证据。">${esc(data.evidence.factVsFeeling)}</textarea></div>
+
+        <div class="cbt-card" style="background:linear-gradient(135deg,#FFFBF7,rgba(163,181,166,0.06));border:1px solid rgba(163,181,166,0.15)"><label class="cbt-label">👁️ 一个完全不了解我的旁观者，看到这些事实会得出什么结论？</label><textarea id="inp-observer" placeholder="如果是一个路人看到同样的信息，TA会怎么想？&#10;旁观者往往比我们自己更客观。">${esc(data.evidence.observerView)}</textarea><p class="cbt-hint">💡 这一步帮你跳出自己的情绪漩涡，看到更客观的画面</p></div>`;
+      $('inp-for').oninput=e=>{data.evidence.forThought=e.target.value};
+      $('inp-against').oninput=e=>{data.evidence.againstThought=e.target.value};
+      $('inp-alt').oninput=e=>{data.evidence.alternatives=e.target.value};
+      $('inp-fact').oninput=e=>{data.evidence.factVsFeeling=e.target.value};
+      $('inp-observer').oninput=e=>{data.evidence.observerView=e.target.value};
+      break;
+    case '3.5': // 分析结果（步骤3完成后自动展示）
+      const distortions=analyzeDistortions(data.worry);
+      data._distortions=distortions;
+      if(distortions.length>0){
+        $('content').innerHTML=`
+          <div class="cbt-guide"><span class="step-badge">✨ 自动分析</span><h3>🧠 检测到可能的思维模式</h3><p class="cbt-explain">根据你写下的内容，发现以下常见的思维陷阱（仅供参考）</p></div>
+          ${distortions.map(d=>`
+            <div class="cbt-card analysis-card fade-in" style="border-left:4px solid var(--color-accent)">
+              <div class="analysis-header"><span class="analysis-icon">${d.icon}</span><span class="analysis-name">${d.name}</span></div>
+              <p class="analysis-desc">${d.desc}</p>
+              <p class="analysis-explain">💡 ${d.explain}</p>
+            </div>
+          `).join('')}
+          <div class="cbt-card" style="background:var(--color-bg-secondary);text-align:center">
+            <p style="font-size:14px;color:var(--color-text-secondary)">这些模式是大脑的"快捷方式"——它们曾经保护过我们，但现在可能帮倒忙了。<br><br>识别它们，就是改变的第一步。🌱</p>
+          </div>`;
+      } else {
+        $('content').innerHTML=`
+          <div class="cbt-guide"><span class="step-badge">✨ 自动分析</span><h3>🧠 思维模式分析</h3><p class="cbt-explain">未检测到明显的思维陷阱模式——你的想法似乎比较平衡。</p></div>
+          <div class="cbt-card" style="background:var(--color-bg-secondary);text-align:center">
+            <p style="font-size:14px;color:var(--color-green-dark)">👍 很好！你描述的方式比较客观。但没关系，后面的步骤一样能帮助你梳理思路。</p>
+          </div>`;
+      }
+      $('nav').innerHTML=`
+        <button class="btn-secondary" id="btn-prev" style="flex:1">← 返回修改</button>
+        <button class="btn-primary" id="btn-next" style="flex:1">继续下一步 →</button>`;
+      $('btn-prev').onclick=()=>{step=3;render();};
+      $('btn-next').onclick=()=>{step=4;render();};
+      $('content').scrollIntoView({behavior:'smooth'});
+      break;
+    case 4: // 重构+成长（增强版 + AI直接分析）
+      const aiMessages=[{role:'system',content:'你是一位温暖、专业的认知行为治疗师。用中文回复，300字以内，像朋友一样说话。'},{role:'user',content:`请帮我客观分析：
+
+【焦虑的事】${data.worry||'未填写'}
+【情绪】${data.emotions.length>0?data.emotions.join('、'):'焦虑'} | 强度${data.anxietyLevel}/10
+【支持证据】${data.evidence.forThought||'无'}
+【反对证据】${data.evidence.againstThought||'无'}
+【其他解释】${data.evidence.alternatives||'无'}
+【事实vs感受】${data.evidence.factVsFeeling||'无'}
+
+从以下维度分析：
+1. 哪些是事实、哪些是过度解读？
+2. 有没有更客观的解释？
+3. 如果是朋友这样想，怎么开导TA？
+4. 给一个具体可行的下一步建议。`}];
+
+      $('content').innerHTML=`
+        <div class="cbt-guide"><span class="step-badge">第4步/共5步</span><h3>🪞 重构认知 & 找到成长</h3><p class="cbt-explain">AI 先帮你客观分析，然后你再深入思考。</p></div>
+
+        <div class="cbt-card" style="background:linear-gradient(135deg,rgba(142,124,195,0.06),rgba(142,124,195,0.02));border:1px solid rgba(142,124,195,0.2)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span style="font-size:24px">🤖</span>
+            <span style="font-weight:600;font-size:15px;color:#6B5B9A">AI 客观分析</span>
+          </div>
+          <div id="ai-config-area" style="${localStorage.getItem('ds_api_key')?'display:none':''}">
+            <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:8px">首次使用需配置 DeepSeek API Key（<a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--color-accent)">免费获取</a>，存在浏览器本地）</p>
+            <input id="inp-apikey" type="password" placeholder="粘贴 DeepSeek API Key..." style="margin-bottom:8px;font-size:13px">
+            <button class="btn-primary" id="btn-save-key" style="width:100%;margin-bottom:8px;font-size:13px">💾 保存密钥</button>
+          </div>
+          <button class="btn-primary" id="btn-ai-analyze" style="width:100%;margin-bottom:8px;background:linear-gradient(135deg,#6B5B9A,#8B7BBA);font-size:14px">🤖 AI 帮我客观分析</button>
+          <div id="ai-loading" style="display:none;text-align:center;padding:20px"><span style="color:var(--color-accent)">AI 正在分析...</span></div>
+          <textarea id="inp-ai" placeholder="AI 分析结果会出现在这里..." style="min-height:140px;background:white;border-color:rgba(142,124,195,0.2)">${esc(data.reframe.aiAnalysis||'')}</textarea>
+        </div>
+
+        <div class="cbt-card"><label class="cbt-label">⚖️ 综合所有分析，一个更平衡、更现实的想法是什么？</label><textarea id="inp-balanced" placeholder="把证据和AI分析结合起来，写出一个更客观的想法...">${esc(data.reframe.balancedThought)}</textarea></div>
+
+        <div class="cbt-card"><label class="cbt-label">🚶 我现在可以做的一个微小行动是什么？</label><textarea id="inp-action" placeholder="不需要解决所有问题，只需一个具体可操作的小步骤...">${esc(data.reframe.actionPlan)}</textarea></div>
+
+        <div class="cbt-card" style="background:linear-gradient(135deg,#FFFBF7,rgba(163,181,166,0.08));border:1px solid rgba(163,181,166,0.2)"><label class="cbt-label">🌱 这次经历想教会我什么？我能获得什么成长？</label><textarea id="inp-growth" placeholder="焦虑常常是一面镜子...比如：「这件事在提醒我要更多相信自己的价值，而不是把自我评价建立在别人的反应上。」">${esc(data.reframe.growthInsight)}</textarea></div>
+
+        <div class="cbt-card"><label class="cbt-label">🗓️ 三个月后回头看这件事，我会怎么评价它？它还重要吗？</label><textarea id="inp-future" placeholder="想象三个月后的自己，已经走过了这段时间...那时的我会怎么看待今天这件事？">${esc(data.reframe.futureSelf)}</textarea><p class="cbt-hint">💡 时间是最好的滤镜。大部分现在让我们焦虑的事，三个月后都不算什么。</p></div>
+
+        <div class="cbt-card"><label class="cbt-label">👫 如果是我最好的朋友遇到同样的事，我会对TA说什么？</label><textarea id="inp-friend" placeholder="我们通常对朋友比对自己更温柔、更理性...把对朋友说的话，说给自己听。">${esc(data.reframe.friendAdvice)}</textarea><p class="cbt-hint">💡 你给朋友的建议，往往也是你自己最需要的。</p></div>`;
+      $('inp-balanced').oninput=e=>{data.reframe.balancedThought=e.target.value};
+      $('inp-action').oninput=e=>{data.reframe.actionPlan=e.target.value};
+      $('inp-growth').oninput=e=>{data.reframe.growthInsight=e.target.value};
+      $('inp-future').oninput=e=>{data.reframe.futureSelf=e.target.value};
+      $('inp-friend').oninput=e=>{data.reframe.friendAdvice=e.target.value};
+      $('inp-ai').oninput=e=>{data.reframe.aiAnalysis=e.target.value};
+      // API Key 保存
+      $('btn-save-key').onclick=()=>{
+        const key=$('inp-apikey').value.trim();
+        if(key){localStorage.setItem('ds_api_key',key);$('ai-config-area').style.display='none';$('btn-save-key').textContent='✅ 已保存'}
+      };
+      // 直接调用 AI 分析
+      $('btn-ai-analyze').onclick=async()=>{
+        const apiKey=localStorage.getItem('ds_api_key');
+        if(!apiKey){$('ai-config-area').style.display='block';$('inp-apikey').focus();return}
+        $('btn-ai-analyze').disabled=true;$('btn-ai-analyze').textContent='⏳ 分析中...';$('ai-loading').style.display='block';
+        try{
+          const resp=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},body:JSON.stringify({model:'deepseek-chat',messages:aiMessages,max_tokens:500,temperature:0.7})});
+          const json=await resp.json();
+          if(json.choices&&json.choices[0]){const result=json.choices[0].message.content;$('inp-ai').value=result;data.reframe.aiAnalysis=result}
+          else{alert('API 错误：'+(json.error?.message||'未知错误，请检查 API Key'))}
+        }catch(e){alert('请求失败：'+e.message+'\n\n请检查网络连接')}
+        $('btn-ai-analyze').disabled=false;$('btn-ai-analyze').textContent='🤖 AI 帮我客观分析';$('ai-loading').style.display='none';
+      };
+      break;
+    case 5: // 给自己的信
+      const soothe=SOOTHE[data.anxietyLevel]||SOOTHE[5];
+      const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+      const dists=data._distortions||[];
+      const analysisBlock=dists.length>0?[
+        '🧠 自动分析：我发现了这些思维模式：','',
+        ...dists.map(d=>'   '+d.icon+' '+d.name+'：'+d.desc),'',
+        '   识别它们就是改变的第一步。它们不是我的错，只是大脑的旧习惯。','',''
+      ]:[];
+
+      const note=[
+        '亲爱的自己，','',
+        '我看到了你因为「'+(data.worry||'一些事情').substring(0,50)+'」而感到'+(data.emotions.length>0?data.emotions.join('、'):'各种复杂的情绪')+'。你的感受是真实的，不需要否定它们。','',
+        ...analysisBlock,
+        ...(data.reframe.aiAnalysis?['🤖 AI 的客观分析：','',data.reframe.aiAnalysis.substring(0,300),'','']:[]),
+        '🔍 我自己客观来看：',
+        '   事实 vs 感受：'+(data.evidence.factVsFeeling||'我区分了事实和猜测，发现很多担心其实没有确凿证据').substring(0,90),'',
+        '   旁观者视角：'+(data.evidence.observerView||'一个局外人可能会看到比我想象中更温和的画面').substring(0,90),'','',
+        '⚖️ 更平衡的想法：'+(data.reframe.balancedThought||'我需要给自己多一点时间和空间').substring(0,100),'','',
+        '🚶 我的一小步：'+(data.reframe.actionPlan||'先深呼吸，照顾好自己').substring(0,80),'','',
+        '🗓️ 三个月后回看：'+(data.reframe.futureSelf||'到那时候，这件事可能已经不重要了').substring(0,90),'','',
+        '👫 对朋友说的话（也是对自己说的）：'+(data.reframe.friendAdvice||'宝贝，你已经做得很好了，这件事没有你想的那么严重').substring(0,90),'','',
+        '🌱 成长：'+(data.reframe.growthInsight||'我正在学习更好地照顾自己').substring(0,100),'','',
+        '最后：'+soothe,'','',
+        '我会越来越好。','',
+        '—— '+q
+      ].join('\n');
+      data._selfNote=note;
+      $('content').innerHTML=`
+        <div class="cbt-guide"><span class="step-badge">第5步/共5步</span><h3>💌 给自己的话</h3><p class="cbt-explain">根据你刚才的探索，这是写给你自己的一封信。</p></div>
+        <div class="cbt-card cbt-self-note"><div class="self-note-header">💌 给自己的一封信</div>
+        <textarea id="inp-note" class="self-note-textarea">${esc(note)}</textarea>
+        <p class="cbt-hint">💡 可以修改后保存，以后回看会很有力量</p></div>
+        <div class="cbt-soothe-card"><p class="soothe-text">${soothe}</p></div>`;
+      $('inp-note').oninput=e=>{data._selfNote=e.target.value};
+      break;
+  }
+  renderNav();
+  $('content').scrollIntoView({behavior:'smooth'});
+}
+
+function save(){
+  // Save to localStorage
+  const entries=JSON.parse(localStorage.getItem('anxiety-journal')||'[]');
+  entries.unshift({
+    id:'anx_'+Date.now().toString(36),
+    worry:data.worry, anxietyLevel:data.anxietyLevel, emotions:[...data.emotions],
+    evidence:{...data.evidence}, reframe:{...data.reframe},
+    selfNote:data._selfNote, createdAt:new Date().toISOString()
+  });
+  localStorage.setItem('anxiety-journal',JSON.stringify(entries));
+
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  $('content').innerHTML=`
+    <div class="completion-card fade-in"><div class="completion-icon">🌱</div>
+    <h3>你又成长了一点</h3>
+    <p style="margin:8px 0;color:var(--color-text-secondary)">觉察 → 面对 → 客观分析 → 重构认知 → 获得成长</p>
+    <div class="completion-quote"><p>"${q}"</p></div></div>`;
+  $('nav').innerHTML=`<button class="btn-primary" id="btn-new" style="width:100%">写新的 →</button>`;
+  $('btn-new').onclick=resetForm;
+}
+
+function resetForm(){
+  step=1;
+  Object.assign(data,{worry:'',anxietyLevel:5,emotions:[],evidence:{forThought:'',againstThought:'',alternatives:'',factVsFeeling:'',observerView:''},reframe:{balancedThought:'',actionPlan:'',growthInsight:'',futureSelf:'',friendAdvice:'',aiAnalysis:''},_selfNote:''});
+  render();
+}
+
+// Start
+render();
+</script>
+</body>
+</html>

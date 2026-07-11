@@ -1,0 +1,200 @@
+/* ============================================
+   静心 — Single Page Scroll Layout
+   ============================================ */
+
+#page-container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md) var(--space-xxl);
+  min-height: 100dvh;
+}
+
+/* --- Page Header --- */
+.page-header {
+  text-align: center;
+  padding: var(--space-xl) 0 var(--space-sm);
+}
+
+/* --- Today Overview --- */
+.page-overview {
+  text-align: center;
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 2px 16px rgba(74, 63, 56, 0.06);
+}
+
+.overview-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--font-size-md);
+  color: var(--color-accent-dark);
+  margin-bottom: var(--space-md);
+  padding: 0 var(--space-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+.overview-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: var(--space-sm);
+}
+
+.overview-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+
+.overview-stat-val {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-serif);
+  color: var(--color-text-primary);
+}
+
+.overview-stat-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.overview-stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.overview-stat-extra {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 1px;
+}
+
+.overview-streaks {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+.overview-streak {
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-accent);
+  background: rgba(232, 144, 106, 0.08);
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+}
+
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+  letter-spacing: 2px;
+}
+
+.page-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* --- Page Card (main building block) --- */
+.page-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  box-shadow: 0 2px 16px rgba(74, 63, 56, 0.06);
+  transition: box-shadow 0.3s ease;
+}
+
+.page-card:hover {
+  box-shadow: 0 4px 24px rgba(74, 63, 56, 0.09);
+}
+
+/* --- Card Header (icon + title) --- */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-icon {
+  font-size: 28px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.card-header h2 {
+  font-family: var(--font-serif);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  margin-bottom: 0;
+}
+
+.card-header .text-muted {
+  font-size: 12px;
+}
+
+.card-body {
+  /* feature content goes here */
+}
+
+/* --- Section Dividers between cards --- */
+.page-card + .page-card {
+  margin-top: 0;
+}
+
+/* --- Footer --- */
+.page-footer {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.page-footer p {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* --- Hide old step nav on scroll page (keep compact) --- */
+.step-nav {
+  margin-top: var(--space-md);
+}
+
+/* --- Scrollbar --- */
+#page-container::-webkit-scrollbar {
+  width: 3px;
+}
+
+#page-container::-webkit-scrollbar-thumb {
+  background: var(--color-accent-light);
+  border-radius: var(--radius-full);
+}
+
+/* --- Responsive --- */
+@media (min-width: 520px) {
+  #page-container {
+    padding-left: var(--space-lg);
+    padding-right: var(--space-lg);
+  }
+}

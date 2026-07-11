@@ -1,0 +1,24 @@
+{
+  "name": "静心",
+  "short_name": "静心",
+  "description": "一个温暖治愈的小程序 - 思绪倾倒、焦虑日记、呼吸引导、正念提醒、每日一句",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF8F0",
+  "theme_color": "#FFF8F0",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%23FFF8F0'/><circle cx='96' cy='80' r='48' fill='%23E8906A'/><text x='96' y='160' text-anchor='middle' font-size='40' font-family='serif' fill='%234A3F38'>静心</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='64' fill='%23FFF8F0'/><circle cx='256' cy='200' r='120' fill='%23E8906A'/><text x='256' y='420' text-anchor='middle' font-size='100' font-family='serif' fill='%234A3F38'>静心</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

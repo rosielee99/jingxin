@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="静心">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#FFF8F0">
+  <meta name="description" content="静心 — 看见焦虑，记录成长">
+  <title>静心</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23E8906A'/><text x='16' y='22' text-anchor='middle' font-size='18' fill='white'>静</text></svg>">
+
+  <link rel="stylesheet" href="css/tokens.css?v=3">
+  <link rel="stylesheet" href="css/base.css?v=3">
+  <link rel="stylesheet" href="css/page.css?v=3">
+  <link rel="stylesheet" href="css/features/brain-dump.css?v=3">
+  <link rel="stylesheet" href="css/features/anxiety-journal.css?v=3">
+  <link rel="stylesheet" href="css/features/gratitude.css?v=3">
+  <link rel="stylesheet" href="css/features/daily-sentence.css?v=3">
+</head>
+<body>
+
+  <main id="page-container">
+
+    <!-- ===== Page Header ===== -->
+    <header class="page-header">
+      <h1 class="page-title">静心 🌿</h1>
+      <p class="page-subtitle">看见焦虑 · 记录成长 · 恢复主体性</p>
+    </header>
+
+    <!-- ===== Today Overview ===== -->
+    <div class="page-overview fade-in" id="page-overview"></div>
+
+    <!-- ===== 1. 情绪签到 ===== -->
+    <section class="page-card" id="view-brain-dump">
+      <div class="card-header">
+        <span class="card-icon">🌱</span>
+        <div>
+          <h2>情绪签到</h2>
+          <p class="text-muted">看见情绪，就是缓解的开始</p>
+        </div>
+      </div>
+      <div class="card-body" id="checkin-body"></div>
+    </section>
+
+    <!-- ===== 2. 焦虑日记 ===== -->
+    <section class="page-card" id="view-anxiety-journal">
+      <div class="card-header">
+        <span class="card-icon">📝</span>
+        <div>
+          <h2>焦虑日记</h2>
+          <p class="text-muted">写下来，分析它，放下它</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="step-indicators" id="anxiety-steps"></div>
+        <div class="step-content" id="anxiety-step-content"></div>
+        <div class="step-nav" id="anxiety-step-nav"></div>
+        <div class="anxiety-history" id="anxiety-history">
+          <button class="history-toggle btn-ghost" id="anxiety-history-toggle">历史记录 <span class="toggle-arrow">▾</span></button>
+          <div class="history-list" id="anxiety-history-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. 收获 ===== -->
+    <section class="page-card" id="view-reminders">
+      <div class="card-header">
+        <span class="card-icon">🌟</span>
+        <div>
+          <h2>收获</h2>
+          <p class="text-muted">记录开心小事，恢复主体性</p>
+        </div>
+      </div>
+      <div class="card-body" id="gratitude-body"></div>
+    </section>
+
+    <!-- ===== 4. 每日一句 ===== -->
+    <section class="page-card" id="view-daily-sentence">
+      <div class="card-header">
+        <span class="card-icon">💬</span>
+        <div>
+          <h2>每日一句</h2>
+          <p class="text-muted">一句话，就够了</p>
+        </div>
+      </div>
+      <div class="card-body daily-body">
+        <div class="daily-quote" id="daily-quote"></div>
+        <div class="daily-input-area">
+          <p class="daily-date" id="daily-date"></p>
+          <input type="text" id="daily-sentence-input" placeholder="今天想对自己说什么？" maxlength="150">
+          <p class="char-count text-muted" id="daily-char-count">0/150</p>
+          <button class="btn-primary daily-save-btn" id="daily-save-btn">保存</button>
+        </div>
+        <div class="daily-streak" id="daily-streak"></div>
+        <div class="daily-calendar" id="daily-calendar"></div>
+      </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer class="page-footer">
+      <p>🌿 你有焦虑，但你也有收获。这就是完整的人。</p>
+    </footer>
+
+  </main>
+
+  <script src="js/storage.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
+  <script src="js/features/brain-dump.js?v=3"></script>
+  <script src="js/features/anxiety-journal.js?v=3"></script>
+  <script src="js/features/gratitude.js?v=3"></script>
+  <script src="js/features/daily-sentence.js?v=3"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
