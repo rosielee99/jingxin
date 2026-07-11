@@ -6,7 +6,8 @@
 window.JingXin = window.JingXin || {};
 
 // Shared emotion data
-const EMOTIONS = ['焦虑','恐惧','担忧','烦躁','不安','无助','沮丧','愤怒','自责','疲惫','孤独','迷茫','自卑','紧张','失落'];
+const EMOTIONS = ['焦虑','恐惧','担忧','烦躁','不安','无助','沮丧','愤怒','自责','疲惫','孤独','迷茫','自卑','紧张','失落','平静','开心','放松','满足','感恩','期待','自信','充实','安心','愉快','温暖','兴奋','自豪','舒适','好奇'];
+const POSITIVE_EMOTIONS = ['平静','开心','放松','满足','感恩','期待','自信','充实','安心','愉快','温暖','兴奋','自豪','舒适','好奇'];
 const SOOTHE_BY_LEVEL = {
   1:'轻轻的波动。你已经有觉察，这就是开始。', 2:'小小的不安。你有能力把它变成动力。',
   3:'轻微的焦虑是成长的信号。', 4:'这些情绪是你在乎的东西在说话。',
@@ -60,7 +61,8 @@ JingXin.BrainDump = {
     const selected = this.emotions;
     const tagsHtml = EMOTIONS.map(em => {
       const isSel = selected.includes(em);
-      return `<span class="emotion-tag${isSel ? ' selected' : ''}" data-emotion="${em}">${em}</span>`;
+      const isPos = POSITIVE_EMOTIONS.includes(em) ? ' positive' : '';
+      return `<span class="emotion-tag${isSel ? ' selected' : ''}${isPos}" data-emotion="${em}">${em}</span>`;
     }).join('');
 
     container.innerHTML = `

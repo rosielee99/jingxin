@@ -156,6 +156,17 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* Positive emotion tags (green tint) */
+.emotion-tag.positive {
+  border-color: rgba(108, 180, 161, 0.25);
+}
+
+.emotion-tag.positive.selected {
+  background: rgba(108, 180, 161, 0.15);
+  color: var(--color-green-dark);
+  border-color: var(--color-green-light);
+}
+
 /* --- Self Note --- */
 .cbt-self-note {
   background: linear-gradient(135deg, #F8FAFD 0%, #F4F8FB 100%);
