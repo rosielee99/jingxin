@@ -1,49 +1,49 @@
 /* ============================================
-   静心 (Calm Mind) — Design Tokens
+   静心 (Calm Mind) — Design Tokens (Blue Theme)
    ============================================ */
 
 :root {
   /* --- Color Palette --- */
 
-  /* Warm cream backgrounds */
-  --color-bg-primary:       #FFF8F0;
-  --color-bg-secondary:     #FFF1E6;
+  /* Cool blue-white backgrounds */
+  --color-bg-primary:       #F4F8FB;
+  --color-bg-secondary:     #E8F0F8;
   --color-bg-card:          #FFFFFF;
-  --color-bg-input:         #FFFBF7;
+  --color-bg-input:         #F8FAFD;
 
-  /* Warm amber/orange accents */
-  --color-accent:           #E8906A;
-  --color-accent-light:     #F5C4A6;
-  --color-accent-dark:      #C5704A;
+  /* Calming blue accents */
+  --color-accent:           #5B8DEE;
+  --color-accent-light:     #A3C4F5;
+  --color-accent-dark:      #3B6FCE;
 
-  /* Gentle sage green */
-  --color-green:            #A3B5A6;
-  --color-green-light:      #C8D5CA;
-  --color-green-dark:       #7A8F7D;
+  /* Teal green */
+  --color-green:            #6CB4A1;
+  --color-green-light:      #A3D5C8;
+  --color-green-dark:       #519987;
 
   /* Text hierarchy */
-  --color-text-primary:     #4A3F38;
-  --color-text-secondary:   #8C7F74;
-  --color-text-muted:       #B5A99E;
-  --color-text-inverse:     #FFFBF7;
+  --color-text-primary:     #2D3A4A;
+  --color-text-secondary:   #5A6B7D;
+  --color-text-muted:       #8A9AAA;
+  --color-text-inverse:     #F8FAFD;
 
-  /* Semantic: Anxiety levels */
-  --color-anxiety-low:      #A3B5A6;    /* 1-3: green */
-  --color-anxiety-med:      #E8C96A;    /* 4-6: yellow */
-  --color-anxiety-high:     #E8906A;    /* 7-8: orange */
-  --color-anxiety-severe:   #D4686A;    /* 9-10: red */
+  /* Semantic: Anxiety levels (cool spectrum) */
+  --color-anxiety-low:      #6CB4A1;    /* 1-3: teal */
+  --color-anxiety-med:      #7CB8E8;    /* 4-6: light blue */
+  --color-anxiety-high:     #6B7ED8;    /* 7-8: indigo */
+  --color-anxiety-severe:   #7B5EA7;    /* 9-10: purple */
 
   /* --- Typography --- */
   --font-sans:  'Segoe UI', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
   --font-serif: 'Noto Serif SC', 'SimSun', 'STSong', 'Georgia', serif;
 
-  --font-size-xs:   0.75rem;   /* 12px */
-  --font-size-sm:   0.875rem;  /* 14px */
-  --font-size-base: 1rem;      /* 16px */
-  --font-size-md:   1.125rem;  /* 18px */
-  --font-size-lg:   1.375rem;  /* 22px */
-  --font-size-xl:   1.75rem;   /* 28px */
-  --font-size-xxl:  2.25rem;   /* 36px */
+  --font-size-xs:   0.75rem;
+  --font-size-sm:   0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md:   1.125rem;
+  --font-size-lg:   1.375rem;
+  --font-size-xl:   1.75rem;
+  --font-size-xxl:  2.25rem;
 
   --font-weight-normal:   400;
   --font-weight-medium:   500;
@@ -54,13 +54,13 @@
   --line-height-relaxed: 1.8;
 
   /* --- Spacing --- */
-  --space-xxs:  0.25rem;  /* 4px */
-  --space-xs:   0.5rem;   /* 8px */
-  --space-sm:   0.75rem;  /* 12px */
-  --space-md:   1rem;     /* 16px */
-  --space-lg:   1.5rem;   /* 24px */
-  --space-xl:   2rem;     /* 32px */
-  --space-xxl:  3rem;     /* 48px */
+  --space-xxs:  0.25rem;
+  --space-xs:   0.5rem;
+  --space-sm:   0.75rem;
+  --space-md:   1rem;
+  --space-lg:   1.5rem;
+  --space-xl:   2rem;
+  --space-xxl:  3rem;
 
   /* --- Border Radius --- */
   --radius-sm:   8px;
@@ -70,13 +70,13 @@
   --radius-full: 9999px;
 
   /* --- Shadows --- */
-  --shadow-xs:  0 1px 3px rgba(74, 63, 56, 0.05);
-  --shadow-sm:  0 2px 8px rgba(74, 63, 56, 0.07);
-  --shadow-md:  0 4px 20px rgba(74, 63, 56, 0.09);
-  --shadow-lg:  0 8px 32px rgba(74, 63, 56, 0.12);
-  --shadow-card: 0 2px 12px rgba(74, 63, 56, 0.06), 0 1px 3px rgba(74, 63, 56, 0.04);
-  --shadow-glow-amber: 0 0 24px rgba(232, 144, 106, 0.25);
-  --shadow-glow-green: 0 0 24px rgba(163, 181, 166, 0.25);
+  --shadow-xs:  0 1px 3px rgba(45, 58, 74, 0.05);
+  --shadow-sm:  0 2px 8px rgba(45, 58, 74, 0.07);
+  --shadow-md:  0 4px 20px rgba(45, 58, 74, 0.09);
+  --shadow-lg:  0 8px 32px rgba(45, 58, 74, 0.12);
+  --shadow-card: 0 2px 12px rgba(45, 58, 74, 0.06), 0 1px 3px rgba(45, 58, 74, 0.04);
+  --shadow-glow-amber: 0 0 24px rgba(91, 141, 238, 0.25);
+  --shadow-glow-green: 0 0 24px rgba(108, 180, 161, 0.25);
 
   /* --- Transitions --- */
   --transition-fast:   150ms ease;

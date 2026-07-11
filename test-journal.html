@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>焦虑日记测试</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/features/anxiety-journal.css">
+  <style>
+    body { overflow-y: auto !important; padding: 16px; }
+    .view { display: block !important; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center;margin-bottom:16px;">焦虑日记 - 独立测试</h2>
+
+  <div class="step-indicators" id="anxiety-steps">
+    <div class="step active" data-step="1"><span>1</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="2"><span>2</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="3"><span>3</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="4"><span>4</span></div>
+    <div class="step-line"></div>
+    <div class="step" data-step="5"><span>5</span></div>
+  </div>
+
+  <div class="step-content" id="anxiety-step-content"></div>
+  <div class="step-nav" id="anxiety-step-nav"></div>
+
+  <hr style="margin:20px 0;">
+  <p id="debug-info" style="font-size:12px;color:gray;"></p>
+
+  <script src="js/storage.js"></script>
+  <script src="js/features/anxiety-journal.js"></script>
+  <script>
+    // 手动初始化
+    document.addEventListener('DOMContentLoaded', async () => {
+      const dbg = document.getElementById('debug-info');
+      try {
+        dbg.textContent = '开始初始化...';
+        await JingXin.AnxietyJournal.init();
+        dbg.textContent = '✅ 初始化成功！当前步骤: ' + JingXin.AnxietyJournal.currentStep;
+      } catch(e) {
+        dbg.textContent = '❌ 错误: ' + e.message + '\n' + e.stack;
+      }
+    });
+  </script>
+</body>
+</html>

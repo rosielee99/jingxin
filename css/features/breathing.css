@@ -63,7 +63,7 @@
 
 .breathing-circle.hold {
   transform: scale(1.0);
-  box-shadow: 0 0 32px rgba(232, 144, 106, 0.35);
+  box-shadow: 0 0 32px rgba(91, 141, 238, 0.35);
 }
 
 .breathing-circle.exhale {
