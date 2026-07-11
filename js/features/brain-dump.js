@@ -158,12 +158,34 @@ JingXin.BrainDump = {
 
     // Show feedback
     const container = document.getElementById('checkin-body');
+
+    // Calculate mood tendency
+    const posCount = this.emotions.filter(e => POSITIVE_EMOTIONS.includes(e)).length;
+    const negCount = this.emotions.filter(e => !POSITIVE_EMOTIONS.includes(e)).length;
+    let moodVerdict, moodIcon, moodColor;
+    if (this.level <= 3 && posCount >= negCount) {
+      moodVerdict = '整体偏正面 ☀️'; moodIcon = '☀️'; moodColor = 'var(--color-green)';
+    } else if (this.level <= 3 && posCount < negCount) {
+      moodVerdict = '情绪平稳，有觉察 🌤️'; moodIcon = '🌤️'; moodColor = 'var(--color-anxiety-med)';
+    } else if (this.level <= 6 && posCount >= negCount) {
+      moodVerdict = '虽然有焦虑，但也有好的感受 🌈'; moodIcon = '🌈'; moodColor = 'var(--color-anxiety-med)';
+    } else if (this.level <= 6) {
+      moodVerdict = '焦虑偏重，需要关注自己 ⛅'; moodIcon = '⛅'; moodColor = 'var(--color-anxiety-high)';
+    } else if (posCount >= negCount && posCount > 0) {
+      moodVerdict = '焦虑较高，但你看到了亮光 💫'; moodIcon = '💫'; moodColor = 'var(--color-anxiety-high)';
+    } else {
+      moodVerdict = '现在比较难受，照顾好自己 🫂'; moodIcon = '🫂'; moodColor = 'var(--color-anxiety-severe)';
+    }
+
     const soothe = SOOTHE_BY_LEVEL[this.level];
 
     container.innerHTML = `
       <div class="checkin-done fade-in">
-        <div class="checkin-done-icon">🌱</div>
+        <div class="checkin-done-icon">${moodIcon}</div>
         <h3>签到完成</h3>
+        <div class="mood-verdict" style="background:${moodColor}15;color:${moodColor};border:2px solid ${moodColor}40">
+          ${moodVerdict}
+        </div>
         <div class="cbt-soothe-card" style="margin:var(--space-md) 0">
           <p class="soothe-text">${soothe}</p>
         </div>
@@ -171,6 +193,7 @@ JingXin.BrainDump = {
           <span class="badge" style="background:${this._levelColor(this.level)}20;color:${this._levelColor(this.level)};font-size:16px;padding:4px 14px">焦虑 ${this.level}/10</span>
           ${this.emotions.length > 0 ? this.emotions.map(e => `<span class="mini-tag">${e}</span>`).join(' ') : ''}
         </div>
+        ${posCount > 0 ? `<p style="font-size:12px;color:var(--color-green-dark);text-align:center;margin-bottom:var(--space-sm)">✨ 你选了 ${posCount} 个正面情绪——焦虑中也有力量</p>` : ''}
         ${this.note ? `<p style="font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:var(--space-md)">"${this.esc(this.note)}"</p>` : ''}
 
         <button class="btn-primary" id="checkin-again" style="width:100%">再签一次</button>

@@ -100,6 +100,16 @@
   padding: var(--space-lg) 0;
 }
 
+.mood-verdict {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.5px;
+}
+
 .checkin-done-icon {
   font-size: 56px;
   margin-bottom: var(--space-sm);
