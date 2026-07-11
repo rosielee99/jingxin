@@ -159,22 +159,19 @@ JingXin.BrainDump = {
     // Show feedback
     const container = document.getElementById('checkin-body');
 
-    // Calculate mood tendency
+    // Calculate mood tendency — low level = positive
     const posCount = this.emotions.filter(e => POSITIVE_EMOTIONS.includes(e)).length;
-    const negCount = this.emotions.filter(e => !POSITIVE_EMOTIONS.includes(e)).length;
     let moodVerdict, moodIcon, moodColor;
-    if (this.level <= 3 && posCount >= negCount) {
-      moodVerdict = '整体偏正面 ☀️'; moodIcon = '☀️'; moodColor = 'var(--color-green)';
-    } else if (this.level <= 3 && posCount < negCount) {
-      moodVerdict = '情绪平稳，有觉察 🌤️'; moodIcon = '🌤️'; moodColor = 'var(--color-anxiety-med)';
-    } else if (this.level <= 6 && posCount >= negCount) {
-      moodVerdict = '虽然有焦虑，但也有好的感受 🌈'; moodIcon = '🌈'; moodColor = 'var(--color-anxiety-med)';
+    if (this.level <= 2) {
+      moodVerdict = '状态很好 ☀️'; moodIcon = '☀️'; moodColor = 'var(--color-green)';
+    } else if (this.level <= 4) {
+      moodVerdict = posCount > 0 ? '整体偏正面，有好的感受 🌤️' : '情绪平稳，有觉察 🌿'; moodIcon = '🌤️'; moodColor = 'var(--color-green)';
     } else if (this.level <= 6) {
-      moodVerdict = '焦虑偏重，需要关注自己 ⛅'; moodIcon = '⛅'; moodColor = 'var(--color-anxiety-high)';
-    } else if (posCount >= negCount && posCount > 0) {
-      moodVerdict = '焦虑较高，但你看到了亮光 💫'; moodIcon = '💫'; moodColor = 'var(--color-anxiety-high)';
+      moodVerdict = posCount > 0 ? '有焦虑也有好的感受，正常的 🌈' : '有些焦虑，需要关注自己 ⛅'; moodIcon = posCount > 0 ? '🌈' : '⛅'; moodColor = 'var(--color-anxiety-med)';
+    } else if (this.level <= 8) {
+      moodVerdict = posCount > 0 ? '焦虑较高，但你看到了亮光 💫' : '焦虑偏重，多照顾自己 🫂'; moodIcon = posCount > 0 ? '💫' : '🫂'; moodColor = 'var(--color-anxiety-high)';
     } else {
-      moodVerdict = '现在比较难受，照顾好自己 🫂'; moodIcon = '🫂'; moodColor = 'var(--color-anxiety-severe)';
+      moodVerdict = posCount > 0 ? '很难受但还看到了好的一面 💪' : '现在比较难受，先照顾好自己 🫂'; moodIcon = posCount > 0 ? '💪' : '🫂'; moodColor = 'var(--color-anxiety-severe)';
     }
 
     const soothe = SOOTHE_BY_LEVEL[this.level];
@@ -193,7 +190,7 @@ JingXin.BrainDump = {
           <span class="badge" style="background:${this._levelColor(this.level)}20;color:${this._levelColor(this.level)};font-size:16px;padding:4px 14px">焦虑 ${this.level}/10</span>
           ${this.emotions.length > 0 ? this.emotions.map(e => `<span class="mini-tag">${e}</span>`).join(' ') : ''}
         </div>
-        ${posCount > 0 ? `<p style="font-size:12px;color:var(--color-green-dark);text-align:center;margin-bottom:var(--space-sm)">✨ 你选了 ${posCount} 个正面情绪——焦虑中也有力量</p>` : ''}
+        ${posCount > 0 && this.level >= 5 ? `<p style="font-size:12px;color:var(--color-green-dark);text-align:center;margin-bottom:var(--space-sm)">✨ 你选了 ${posCount} 个正面情绪——焦虑中也有力量</p>` : ''}
         ${this.note ? `<p style="font-size:13px;color:var(--color-text-secondary);text-align:center;margin-bottom:var(--space-md)">"${this.esc(this.note)}"</p>` : ''}
 
         <button class="btn-primary" id="checkin-again" style="width:100%">再签一次</button>
