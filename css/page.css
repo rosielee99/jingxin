@@ -107,18 +107,34 @@
   margin-top: 2px;
 }
 
-/* --- Page Card (main building block) --- */
+/* --- Page Card — layered sections --- */
 .page-card {
   background: white;
-  border-radius: var(--radius-xl);
-  padding: var(--space-lg);
-  margin-bottom: var(--space-md);
-  box-shadow: 0 2px 16px rgba(74, 63, 56, 0.06);
-  transition: box-shadow 0.3s ease;
+  border-radius: 24px;
+  padding: 24px 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 24px rgba(74, 63, 56, 0.07);
+  position: relative;
+}
+
+/* Each card gets a distinct tinted header bar */
+#view-checkin {
+  background: linear-gradient(180deg, #EEF3FB 0%, #FFFFFF 120px);
+  border-top: 4px solid #5B8DEE;
+}
+
+#view-journal {
+  background: linear-gradient(180deg, #F8FAFD 0%, #FFFFFF 120px);
+  border-top: 4px solid #6CB4A1;
+}
+
+#view-trends {
+  background: linear-gradient(180deg, #E8F5F1 0%, #FFFFFF 120px);
+  border-top: 4px solid #7B5EA7;
 }
 
 .page-card:hover {
-  box-shadow: 0 4px 24px rgba(74, 63, 56, 0.09);
+  box-shadow: 0 6px 32px rgba(74, 63, 56, 0.10);
 }
 
 /* --- Card Header (icon + title) --- */
