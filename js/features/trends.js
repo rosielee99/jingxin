@@ -116,14 +116,60 @@ JingXin.Trends = {
 
     const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
 
+    // === Generate trend analysis ===
+    const analysis = [];
+    const allLevels = validDays.map(d => d.level);
+    const overallAvg = allLevels.reduce((a,b)=>a+b,0)/allLevels.length;
+    const maxLevel = Math.max(...allLevels);
+    const minLevel = Math.min(...allLevels);
+    const maxDay = validDays.find(d => d.level === maxLevel);
+    const minDay = validDays.find(d => d.level === minLevel);
+
+    // 1. Overall assessment
+    if (overallAvg <= 4) analysis.push(`近期的情绪总体比较平稳，平均焦虑 ${overallAvg.toFixed(1)}/10。这说明你最近的状态不错，有比较好的情绪调节能力。继续保持现在的节奏。`);
+    else if (overallAvg <= 6) analysis.push(`近期平均焦虑 ${overallAvg.toFixed(1)}/10，处于中等水平。有波动是正常的——你在意的事情值得关注，但你也有处理它们的能力。`);
+    else if (overallAvg <= 8) analysis.push(`近期平均焦虑 ${overallAvg.toFixed(1)}/10，偏高。这说明你最近承担了不少压力。记得给自己喘息的空间——你不需要把所有事情都扛在肩上。`);
+    else analysis.push(`近期平均焦虑 ${overallAvg.toFixed(1)}/10，比较高。这段时间可能很辛苦。但你看——你每天都在签到，在关注自己。这就是在照顾自己。`);
+
+    // 2. Trend direction
+    if (Math.abs(diff) > 0.5) {
+      if (diff < 0) analysis.push(`好消息是，最近一周比之前下降了 ${Math.abs(diff).toFixed(1)} 分，趋势在好转。你做的这些记录和分析，正在起作用。`);
+      else analysis.push(`最近一周比之前上升了 ${diff.toFixed(1)} 分。可能最近的事情比较多，或者有新的压力源。注意到它就是改变的开始。`);
+    } else {
+      analysis.push('情绪水平近期基本持平，没有明显上升或下降。这说明你处于一个相对稳定的阶段。');
+    }
+
+    // 3. Peak analysis
+    if (maxLevel - minLevel >= 4) {
+      analysis.push(`你的情绪波动幅度比较大——最高 ${maxLevel}/10（${maxDay ? maxDay.date.split('-').slice(1).join('/') : ''}），最低 ${minLevel}/10（${minDay ? minDay.date.split('-').slice(1).join('/') : ''}）。波动大说明你的情绪很敏感，这其实是一种感知力的表现——你对生活有真实的反应。试着观察一下波动大的日子发生了什么，可能会找到规律。`);
+    }
+
+    // 4. Trigger insight
+    if (top && total >= 3) {
+      analysis.push(`从触发因素来看，「${top[0]}」占了 ${Math.round(top[1]/total*100)}%，是你近期最主要的焦虑来源。如果你愿意，可以在日记里专门针对这个领域做一次分步梳理——把事实和担心分开，找到你能控制的部分。`);
+    }
+
+    // 5. Closing
+    const closings = [
+      '每天签到这个习惯本身，就是在对自己的情绪负责。你在做一件很重要的事。',
+      '情绪有高有低是正常的——没有人的心情是一条直线。你在记录它、观察它，这就已经比大多数人做得好。',
+      '数据不会说谎：你在变好。即使有时候感觉不到，但曲线会告诉你真相。',
+    ];
+    analysis.push(closings[Math.floor(Math.random() * closings.length)]);
+
+    const analysisHtml = analysis.map(p => `<p style="margin-bottom:12px;line-height:1.65;font-size:14px">${p}</p>`).join('');
+
     el.innerHTML = `
       <p style="font-size:16px;font-weight:600;text-align:center;margin-bottom:8px">📈 情绪波动</p>
       ${svg}
-      <div style="text-align:center;font-size:14px;margin:8px 0 16px">焦虑指数 ${trendHtml}</div>
+      <div style="text-align:center;font-size:14px;margin:8px 0">焦虑指数 ${trendHtml}</div>
+      <div class="analysis-rich" style="background:#F8FAFD;border-radius:16px;padding:16px 20px;margin:16px 0;color:#5A6B7D">
+        <p style="font-weight:600;font-size:14px;color:#3B6FCE;margin-bottom:12px">📋 趋势分析</p>
+        ${analysisHtml}
+      </div>
       ${total > 0 ? `
         <p style="font-size:14px;color:#5A6B7D;margin-bottom:8px">触发因素分布</p>
         ${triggerHtml}
-        ${top ? `<p style="text-align:center;margin-top:12px;padding:12px;background:#F8FAFD;border-radius:12px;font-size:14px;color:#5A6B7D">💡 最近焦虑主要来自 <b style="color:#3B6FCE">${top[0]}</b></p>` : ''}
       ` : ''}`;
   }
 };
