@@ -16,11 +16,8 @@
 
   <link rel="stylesheet" href="css/tokens.css?v=3">
   <link rel="stylesheet" href="css/base.css?v=3">
-  <link rel="stylesheet" href="css/page.css?v=3">
-  <link rel="stylesheet" href="css/features/brain-dump.css?v=3">
-  <link rel="stylesheet" href="css/features/anxiety-journal.css?v=3">
-  <link rel="stylesheet" href="css/features/gratitude.css?v=3">
-  <link rel="stylesheet" href="css/features/daily-sentence.css?v=3">
+  <link rel="stylesheet" href="css/page.css?v=4">
+  <link rel="stylesheet" href="css/features/anxiety-journal.css?v=4">
 </head>
 <body>
 
@@ -29,91 +26,44 @@
     <!-- ===== Page Header ===== -->
     <header class="page-header">
       <h1 class="page-title">静心 🌿</h1>
-      <p class="page-subtitle">看见焦虑 · 记录成长 · 恢复主体性</p>
+      <p class="page-subtitle">每天和自己对话 3 分钟</p>
     </header>
 
-    <!-- ===== Today Overview ===== -->
-    <div class="page-overview fade-in" id="page-overview"></div>
-
-    <!-- ===== 1. 情绪签到 ===== -->
-    <section class="page-card" id="view-brain-dump">
-      <div class="card-header">
-        <span class="card-icon">🌱</span>
-        <div>
-          <h2>情绪签到</h2>
-          <p class="text-muted">看见情绪，就是缓解的开始</p>
-        </div>
-      </div>
+    <!-- ===== 今天 ===== -->
+    <section class="page-card" id="view-checkin">
       <div class="card-body" id="checkin-body"></div>
     </section>
 
-    <!-- ===== 2. 焦虑日记 ===== -->
-    <section class="page-card" id="view-anxiety-journal">
+    <!-- ===== 日记 ===== -->
+    <section class="page-card" id="view-journal">
       <div class="card-header">
         <span class="card-icon">📝</span>
-        <div>
-          <h2>焦虑日记</h2>
-          <p class="text-muted">写下来，分析它，放下它</p>
-        </div>
+        <div><h2>焦虑日记</h2><p class="text-muted">写下来，就已经在帮自己了</p></div>
       </div>
-      <div class="card-body">
-        <div class="step-indicators" id="anxiety-steps"></div>
-        <div class="step-content" id="anxiety-step-content"></div>
-        <div class="step-nav" id="anxiety-step-nav"></div>
-        <div class="anxiety-history" id="anxiety-history">
-          <button class="history-toggle btn-ghost" id="anxiety-history-toggle">历史记录 <span class="toggle-arrow">▾</span></button>
-          <div class="history-list" id="anxiety-history-list"></div>
-        </div>
-      </div>
+      <div class="card-body" id="journal-body"></div>
     </section>
 
-    <!-- ===== 3. 收获 ===== -->
-    <section class="page-card" id="view-reminders">
+    <!-- ===== 趋势 ===== -->
+    <section class="page-card" id="view-trends">
       <div class="card-header">
-        <span class="card-icon">🌟</span>
-        <div>
-          <h2>收获</h2>
-          <p class="text-muted">记录开心小事，恢复主体性</p>
-        </div>
+        <span class="card-icon">📊</span>
+        <div><h2>趋势</h2><p class="text-muted">看到变化，看到规律</p></div>
       </div>
-      <div class="card-body" id="gratitude-body"></div>
-    </section>
-
-    <!-- ===== 4. 每日一句 ===== -->
-    <section class="page-card" id="view-daily-sentence">
-      <div class="card-header">
-        <span class="card-icon">💬</span>
-        <div>
-          <h2>每日一句</h2>
-          <p class="text-muted">一句话，就够了</p>
-        </div>
-      </div>
-      <div class="card-body daily-body">
-        <div class="daily-quote" id="daily-quote"></div>
-        <div class="daily-input-area">
-          <p class="daily-date" id="daily-date"></p>
-          <input type="text" id="daily-sentence-input" placeholder="今天想对自己说什么？" maxlength="150">
-          <p class="char-count text-muted" id="daily-char-count">0/150</p>
-          <button class="btn-primary daily-save-btn" id="daily-save-btn">保存</button>
-        </div>
-        <div class="daily-streak" id="daily-streak"></div>
-        <div class="daily-calendar" id="daily-calendar"></div>
-      </div>
+      <div class="card-body" id="trends-body"></div>
     </section>
 
     <!-- ===== Footer ===== -->
     <footer class="page-footer">
-      <p>🌿 你有焦虑，但你也有收获。这就是完整的人。</p>
+      <p style="font-size:11px;color:#B0BEC5">🔒 数据仅存储在你的浏览器本地</p>
     </footer>
 
   </main>
 
-  <script src="js/storage.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
-  <script src="js/features/brain-dump.js?v=3"></script>
-  <script src="js/features/anxiety-journal.js?v=3"></script>
-  <script src="js/features/gratitude.js?v=3"></script>
-  <script src="js/features/daily-sentence.js?v=3"></script>
+  <script src="js/storage.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
+  <script src="js/features/checkin.js?v=4"></script>
+  <script src="js/features/journal.js?v=4"></script>
+  <script src="js/features/trends.js?v=4"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
