@@ -5,7 +5,7 @@ JingXin.Checkin = {
   step: 'mood',   // mood | intensity | trigger | note | done
   level: 5,
   emotions: [],
-  trigger: '',
+  triggers: [],
   note: '',
 
   async init() { this.render(); },
@@ -62,13 +62,13 @@ JingXin.Checkin = {
     const colors = l => l <= 3 ? '#6CB4A1' : l <= 6 ? '#7CB8E8' : l <= 8 ? '#6B7ED8' : '#7B5EA7';
     el.innerHTML = `
       <div class="mood-question">${this.emotions[0]}</div>
-      <div class="step-label">这种感受有多强烈？</div>
+      <div class="step-label">有多强烈？</div>
       <div class="level-display-big" style="color:${colors(this.level)}">${this.level}</div>
       <input type="range" min="1" max="10" value="${this.level}" class="anxiety-slider" oninput="JingXin.Checkin.onIntensity(this.value)">
-      <div class="anxiety-labels"><span>一点点</span><span>非常强烈</span></div>
-      <div style="display:flex;gap:12px;margin-top:24px">
-        <button class="btn-secondary" style="flex:1" onclick="JingXin.Checkin.save()">不想分析，直接保存</button>
-        <button class="btn-primary" style="flex:1" onclick="JingXin.Checkin.goTrigger()">继续 →</button>
+      <div class="anxiety-labels"><span>轻微</span><span>强烈</span></div>
+      <div style="display:flex;gap:12px;margin-top:20px">
+        <button class="btn-secondary" style="flex:1;font-size:13px" onclick="JingXin.Checkin.save()">跳过</button>
+        <button class="btn-primary" style="flex:1" onclick="JingXin.Checkin.goTrigger()">继续</button>
       </div>`;
   },
 
@@ -85,23 +85,24 @@ JingXin.Checkin = {
   _renderTrigger(el) {
     const triggers = ['工作', '学业', '关系', '健康', '金钱', '未来', '家庭', '说不清'];
     el.innerHTML = `
-      <div class="step-label">你觉得是什么触发了它？</div>
-      <p class="step-hint">可选，选了有助于以后发现规律</p>
-      <div class="tag-grid" style="margin-top:16px">
+      <div class="step-label">是什么触发了它？（可多选）</div>
+      <div class="tag-grid" style="margin-top:12px">
         ${triggers.map(t => `
-          <span class="emotion-tag${this.trigger === t ? ' selected' : ''}" onclick="JingXin.Checkin.selectTrigger('${t}')">${t}</span>
+          <span class="emotion-tag${this.triggers.includes(t) ? ' selected' : ''}" onclick="JingXin.Checkin.toggleTrigger('${t}')">${t}</span>
         `).join('')}
       </div>
-      <div style="display:flex;gap:12px;margin-top:24px">
-        <button class="btn-secondary" style="flex:1" onclick="JingXin.Checkin.save()">跳过，保存</button>
+      <div style="display:flex;gap:12px;margin-top:20px">
+        <button class="btn-secondary" style="flex:1" onclick="JingXin.Checkin.save()">跳过保存</button>
         <button class="btn-primary" style="flex:1" onclick="JingXin.Checkin.goNote()">再说两句 →</button>
       </div>`;
   },
 
-  selectTrigger(t) {
-    this.trigger = t;
+  toggleTrigger(t) {
+    const idx = this.triggers.indexOf(t);
+    if (idx >= 0) this.triggers.splice(idx, 1);
+    else this.triggers.push(t);
     document.querySelectorAll('.tag-grid .emotion-tag').forEach(tag => {
-      tag.classList.toggle('selected', tag.textContent === t);
+      tag.classList.toggle('selected', this.triggers.includes(tag.textContent));
     });
   },
 
@@ -115,7 +116,7 @@ JingXin.Checkin = {
 
   async save() {
     await JingXin.IPC.invoke('brain-dump:save', {
-      content: JSON.stringify({ level: this.level, emotions: this.emotions, trigger: this.trigger, note: this.note, createdAt: new Date().toISOString() })
+      content: JSON.stringify({ level: this.level, emotions: this.emotions, triggers: this.triggers, note: this.note, createdAt: new Date().toISOString() })
     });
     this.step = 'done';
     this.render();
@@ -156,7 +157,7 @@ JingXin.Checkin = {
           <p>${analysis}</p>
         </div>
 
-        ${this.trigger ? `<p style="font-size:13px;color:#8A9AAA;text-align:center;margin-bottom:12px">触发因素：${this.trigger}</p>` : ''}
+        ${this.triggers.length > 0 ? `<p style="font-size:13px;color:#8A9AAA;text-align:center;margin-bottom:12px">触发：${this.triggers.join('、')}</p>` : ''}
         ${this.note ? `<p style="font-size:13px;color:#5A6B7D;text-align:center;margin-bottom:12px;font-style:italic">"${this.esc(this.note)}"</p>` : ''}
 
         <div style="text-align:center;margin-bottom:16px">
@@ -180,7 +181,7 @@ JingXin.Checkin = {
   },
 
   reset() {
-    this.step = 'mood'; this.level = 5; this.emotions = []; this.trigger = ''; this.note = '';
+    this.step = 'mood'; this.level = 5; this.emotions = []; this.triggers = []; this.note = '';
     this.render();
   },
 

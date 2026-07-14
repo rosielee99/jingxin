@@ -106,8 +106,8 @@ JingXin.Trends = {
     // Trigger breakdown
     const counts = {}; let total = 0;
     for (const c of recent) {
-      let t=''; try{t=JSON.parse(c.content).trigger||''}catch(_){}
-      if(t){counts[t]=(counts[t]||0)+1;total++;}
+      let triggers=[]; try{const d=JSON.parse(c.content);triggers=d.triggers||(d.trigger?[d.trigger]:[])}catch(_){}
+      for(const t of triggers){counts[t]=(counts[t]||0)+1;total++;}
     }
     const maxVal = Math.max(...Object.values(counts), 1);
     const triggerHtml = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
