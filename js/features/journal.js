@@ -2,8 +2,9 @@
 window.JingXin = window.JingXin || {};
 
 JingXin.Journal = {
-  mode: 'quick',  // quick | guided
-  worry: '', level: 5,
+  mood: 'anxiety', // anxiety | happy
+  mode: 'quick',   // quick | guided
+  worry: '', level: 5, happyLevel: 7,
   gStep: 1, gFact: '', gFear: '', gProbability: '', gAction: '', gUncontrol: '',
   result: false,
 
@@ -13,12 +14,41 @@ JingXin.Journal = {
     const el = document.getElementById('journal-body'); if (!el) return;
     if (this.result) return this._renderResult(el);
     if (this.mode === 'guided') return this._renderGuided(el);
+    if (this.mood === 'happy') return this._renderHappy(el);
     this._renderQuick(el);
+  },
+
+  // === 快乐日记 ===
+  _renderHappy(el) {
+    const colors = l => '#6CB4A1'; // always green for happy
+    el.innerHTML = `
+      <div style="display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden">
+        <div class="journal-tab" style="flex:1;text-align:center;padding:10px;font-size:14px;background:#E8F0F8;color:#8A9AAA;cursor:pointer" onclick="JingXin.Journal.mood='anxiety';JingXin.Journal.render()">😟 焦虑日记</div>
+        <div class="journal-tab" style="flex:1;text-align:center;padding:10px;font-size:14px;background:#5B8DEE;color:#fff;font-weight:600;cursor:pointer" onclick="JingXin.Journal.mood='happy';JingXin.Journal.render()">🌟 快乐日记</div>
+      </div>
+      <label class="cbt-label">今天有什么让你开心的事？</label>
+      <textarea oninput="JingXin.Journal.worry=this.value" placeholder="比如：今天喝到了一杯很好喝的咖啡&#10;比如：路上看到了很漂亮的日落&#10;&#10;小事就行，不用惊天动地。" style="min-height:100px">${this.esc(this.worry)}</textarea>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
+        <span style="font-size:14px;color:#5A6B7D">有多开心？</span>
+        <span style="font-weight:700;font-size:22px;color:#6CB4A1">${this.happyLevel}/10</span>
+      </div>
+      <input type="range" min="1" max="10" value="${this.happyLevel}" class="anxiety-slider" oninput="JingXin.Journal.happyLevel=parseInt(this.value);this.nextElementSibling.querySelector('span').textContent=this.value+'/10'">
+      <button class="btn-primary" style="width:100%;margin-top:16px;background:linear-gradient(135deg,#6CB4A1,#519987)!important" onclick="JingXin.Journal.happySave()">🌟 记下这件好事</button>`;
+  },
+
+  happySave() {
+    JingXin.IPC.invoke('gratitude:save', { happiness: this.happyLevel, note: this.worry, category: '生活小事' });
+    this.result = true;
+    this.render();
   },
 
   _renderQuick(el) {
     const colors = l => l <= 3 ? '#6CB4A1' : l <= 6 ? '#7CB8E8' : l <= 8 ? '#6B7ED8' : '#7B5EA7';
     el.innerHTML = `
+      <div style="display:flex;gap:0;margin-bottom:16px;border-radius:12px;overflow:hidden">
+        <div class="journal-tab" style="flex:1;text-align:center;padding:10px;font-size:14px;background:#5B8DEE;color:#fff;font-weight:600;cursor:pointer">😟 焦虑日记</div>
+        <div class="journal-tab" style="flex:1;text-align:center;padding:10px;font-size:14px;background:#E8F0F8;color:#8A9AAA;cursor:pointer" onclick="JingXin.Journal.mood='happy';JingXin.Journal.render()">🌟 快乐日记</div>
+      </div>
       <label class="cbt-label">我现在最担心的是……</label>
       <textarea oninput="JingXin.Journal.worry=this.value" placeholder="一句话就行。比如：我怕明天的演讲搞砸。" style="min-height:80px">${this.esc(this.worry)}</textarea>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px">
@@ -73,11 +103,15 @@ JingXin.Journal = {
   },
 
   _renderResult(el) {
+    const isHappy = this.mood === 'happy';
     el.innerHTML = `
       <div style="text-align:center;padding:16px 0">
-        <span style="font-size:64px;display:block">🌱</span>
-        <p style="font-size:18px;color:#5A6B7D;margin:12px 0;line-height:1.6">你写下了心里最担心的事。<br>光是写出来，就已经在帮自己了。</p>
-        <button class="btn-primary" style="width:100%;margin-top:12px" onclick="JingXin.Journal.reset()">再写一次</button>
+        <span style="font-size:64px;display:block">${isHappy ? '🌟' : '🌱'}</span>
+        <p style="font-size:18px;color:#5A6B7D;margin:12px 0;line-height:1.6">${isHappy ? '开心的事值得被记住。<br>这是你对抗焦虑的力量。' : '你写下了心里最担心的事。<br>光是写出来，就已经在帮自己了。'}</p>
+        <div style="display:flex;gap:8px">
+          <button class="btn-primary" style="flex:1" onclick="JingXin.Journal.reset()">再写一次</button>
+          <button class="btn-secondary" style="flex:1" onclick="JingXin.Journal.mood='${isHappy ? 'anxiety' : 'happy'}';JingXin.Journal.reset();JingXin.Journal.render()">${isHappy ? '😟 写焦虑' : '🌟 写开心'}</button>
+        </div>
       </div>`;
   },
 

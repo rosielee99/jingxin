@@ -122,14 +122,61 @@ JingXin.Checkin = {
   },
 
   _renderDone(el) {
-    const msgs = ['已经替你记下了 🌱', '今天到这里也可以。', '你已经在照顾自己了。', '深呼吸一下，你今天做得够多了。'];
+    const colors = l => l <= 3 ? '#6CB4A1' : l <= 6 ? '#7CB8E8' : l <= 8 ? '#6B7ED8' : '#7B5EA7';
+    const moods = { '平静':'😌', '还不错':'🙂', '一般':'😐', '焦虑':'😟', '很难受':'😣' };
+    const icon = moods[this.emotions[0]] || '🌱';
+
+    // Mini analysis based on level
+    let analysis = '';
+    if (this.level <= 3) analysis = '状态不错。保持这种觉察，它会在你需要的时候保护你。';
+    else if (this.level <= 5) analysis = '轻微的波动是正常的。你已经注意到了它，这本身就是一种能力。';
+    else if (this.level <= 7) analysis = '焦虑感比较明显了。把它写下来就已经在帮自己——焦虑在纸上比在脑子里小。';
+    else analysis = '现在可能比较难受。你已经做了一件很重要的事：停下来，看见它。剩下的可以慢慢来。';
+
+    // Count today's checkins
+    const today = new Date().toISOString().split('T')[0];
+    const allCheckins = JingXin.Storage._get('jingxin-brain-dump', []).filter(c => c.createdAt.startsWith(today));
+    const countMsg = allCheckins.length > 1 ? `今天第 ${allCheckins.length} 次签到 · ` : '';
+
+    // Week streak
+    const weekDays = [...new Set(JingXin.Storage._get('jingxin-brain-dump', []).map(c => c.createdAt.split('T')[0]))];
+    const streak = this._calcStreak(weekDays);
+
     el.innerHTML = `
-      <div style="text-align:center;padding:16px 0">
-        <span style="font-size:64px;display:block;margin-bottom:12px">🌱</span>
-        <p style="font-size:20px;font-weight:600;margin-bottom:8px">${this._pick(msgs)}</p>
-        <p style="font-size:14px;color:#8A9AAA">深呼吸一下，你今天做得够多了。</p>
-        <button class="btn-primary" style="width:100%;margin-top:16px" onclick="JingXin.Checkin.reset()">再签一次</button>
+      <div class="checkin-done-area">
+        <div class="done-mood" style="background:${colors(this.level)}15;border:2px solid ${colors(this.level)}40">
+          <span class="done-emoji">${icon}</span>
+          <div>
+            <span class="done-label">${this.emotions[0]}</span>
+            <span class="done-level" style="color:${colors(this.level)}">焦虑 ${this.level}/10</span>
+          </div>
+        </div>
+
+        <div class="done-analysis" style="border-left:3px solid ${colors(this.level)}">
+          <p>${analysis}</p>
+        </div>
+
+        ${this.trigger ? `<p style="font-size:13px;color:#8A9AAA;text-align:center;margin-bottom:12px">触发因素：${this.trigger}</p>` : ''}
+        ${this.note ? `<p style="font-size:13px;color:#5A6B7D;text-align:center;margin-bottom:12px;font-style:italic">"${this.esc(this.note)}"</p>` : ''}
+
+        <div style="text-align:center;margin-bottom:16px">
+          <span style="font-size:12px;color:#8A9AAA">${countMsg}${streak > 1 ? '🔥 连续签到 ' + streak + ' 天' : ''}</span>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn-primary" style="flex:1" onclick="JingXin.Checkin.reset()">再签一次</button>
+          <button class="btn-secondary" style="flex:1" onclick="document.getElementById('view-journal').scrollIntoView({behavior:'smooth'})">📝 去写日记</button>
+        </div>
       </div>`;
+  },
+
+  _calcStreak(dates) {
+    let s = 0; const d = new Date(); d.setHours(0,0,0,0);
+    for (let i = 0; i < 31; i++) {
+      const check = new Date(d); check.setDate(check.getDate() - i);
+      if (dates.includes(check.toISOString().split('T')[0])) s++; else break;
+    }
+    return s;
   },
 
   reset() {
