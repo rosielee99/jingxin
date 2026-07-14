@@ -3,9 +3,11 @@ window.JingXin = window.JingXin || {};
 
 JingXin.Journal = {
   mood: 'anxiety', // anxiety | happy
-  mode: 'quick',   // quick | guided
+  mode: 'quick',   // quick | guided (CBT)
   worry: '', level: 5, happyLevel: 7,
-  gStep: 1, gFact: '', gFear: '', gProbability: '', gAction: '', gUncontrol: '',
+  gStep: 1, totalGSteps: 7,
+  gSituation: '', gThought: '', gEmotion: '',
+  gDistortion: '', gEvidence: '', gBalanced: '', gPlan: '',
   result: false,
 
   async init() { this.render(); },
@@ -133,37 +135,63 @@ JingXin.Journal = {
     this.render();
   },
 
+  // === CBT 7步法 ===
+  switchGuided() { this.mode = 'guided'; this.gStep = 1; this.render(); },
+
   _renderGuided(el) {
-    const steps = [
-      { title:'发生了什么？', hint:'只描述事实，不需要解释', field:'gFact', placeholder:'比如：明天要做一个重要的演讲' },
-      { title:'我在担心什么？', hint:'写下脑中最坏的想法', field:'gFear', placeholder:'比如：我怕讲到一半忘词，所有人都在看我' },
-      { title:'这个担心有多可能发生？', hint:'', field:'gProbability', placeholder:'', type:'select' },
-      { title:'我现在能做的一小步是什么？', hint:'哪怕只是喝水、睡觉、发一条消息', field:'gAction', placeholder:'比如：今晚早点睡，明天提前到会场' },
-      { title:'有哪些不在我控制范围内？', hint:'允许自己暂时放下这些', field:'gUncontrol', placeholder:'比如：观众的反应、会不会有人刁难' },
+    const cbtSteps = [
+      { num:1, title:'📋 情境', label:'发生了什么？客观地描述', hint:'只写事实，不加判断。就像监控摄像头看到的那样。', field:'gSituation', ph:'比如：明天下午3点要在会议室做演讲，共30人参加。' },
+      { num:2, title:'💭 自动思维', label:'当时脑子里冒出了什么想法？', hint:'那些一闪而过的念头，可能很夸张也没关系', field:'gThought', ph:'比如：我肯定会搞砸，所有人都会觉得我很差劲。' },
+      { num:3, title:'🎯 情绪', label:'感受到了什么情绪？有多强烈？', hint:'', field:'gEmotion', ph:'比如：焦虑 7/10、恐惧 6/10', type:'text' },
+      { num:4, title:'🔍 认知扭曲', label:'属于哪种思维陷阱？', hint:'', field:'gDistortion', type:'select', opts:['灾难化','读心术','非黑即白','过度概括','情绪推理','个人化','负面过滤','不确定'] },
+      { num:5, title:'⚖️ 证据检验', label:'支持和反对的证据分别是什么？', hint:'像律师一样客观分析', field:'gEvidence', ph:'支持：上次演讲确实紧张了\n反对：之前5次演讲最终都顺利完成了，同事说我讲得不错' },
+      { num:6, title:'🪞 平衡想法', label:'换个更客观的角度看，会是什么？', hint:'结合证据，写出一个更现实的想法', field:'gBalanced', ph:'比如：我确实会紧张，但过去的经验说明我有能力完成。即使不完美，也不会是灾难。' },
+      { num:7, title:'🚶 行动计划', label:'现在能做的一个小行动是什么？', hint:'不需要解决全部，只需一步', field:'gPlan', ph:'比如：今晚把PPT再过一遍，10点睡觉。明天提前半小时到会场适应环境。' },
     ];
-    const s = steps[this.gStep - 1];
+
+    const s = cbtSteps[this.gStep - 1];
     let inputHtml = '';
     if (s.type === 'select') {
-      const opts = ['很低','较低','不确定','较高'];
-      inputHtml = `<div style="display:flex;gap:8px;margin-top:12px">${opts.map(o => `<span class="emotion-tag${this.gProbability===o?' selected':''}" onclick="JingXin.Journal.gProbability='${o}';JingXin.Journal.render()" style="flex:1;text-align:center;cursor:pointer">${o}</span>`).join('')}</div>`;
+      inputHtml = `<div class="tag-grid" style="margin-top:12px">${s.opts.map(o => `<span class="emotion-tag${this.gDistortion===o?' selected':''}" onclick="JingXin.Journal.gDistortion='${o}';JingXin.Journal.render()" style="cursor:pointer">${o}</span>`).join('')}</div>`;
     } else {
-      inputHtml = `<textarea oninput="JingXin.Journal.${s.field}=this.value" placeholder="${s.placeholder}" style="min-height:80px;margin-top:12px">${this.esc(this[s.field] || '')}</textarea>`;
+      inputHtml = `<textarea oninput="JingXin.Journal.${s.field}=this.value" placeholder="${s.ph}" style="min-height:80px;margin-top:12px">${this.esc(this[s.field] || '')}</textarea>`;
     }
 
+    const progress = Math.round(this.gStep / this.totalGSteps * 100);
+
     el.innerHTML = `
-      <div style="margin-bottom:8px;font-size:12px;color:#8A9AAA">第 ${this.gStep} / 5 步</div>
-      <div class="step-label" style="font-size:18px;font-weight:600;color:#2D3A4A">${s.title}</div>
-      ${s.hint ? `<p class="step-hint" style="font-size:13px;color:#8A9AAA;font-style:italic">${s.hint}</p>` : ''}
+      <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:#5B8DEE;font-weight:600">CBT 第${s.num}/7步</span>
+        <div style="flex:1;height:3px;background:#E8F0F8;border-radius:2px"><div style="height:100%;width:${progress}%;background:#5B8DEE;border-radius:2px;transition:width 0.3s"></div></div>
+      </div>
+      <div style="font-size:18px;font-weight:600;color:#2D3A4A;margin-bottom:4px">${s.title}</div>
+      <p style="font-size:15px;color:#5A6B7D;margin-bottom:4px">${s.label}</p>
+      ${s.hint ? `<p style="font-size:12px;color:#8A9AAA;font-style:italic;margin-bottom:4px">${s.hint}</p>` : ''}
       ${inputHtml}
       <div style="display:flex;gap:12px;margin-top:16px">
         ${this.gStep > 1 ? `<button class="btn-secondary" style="flex:1" onclick="JingXin.Journal.gStep--;JingXin.Journal.render()">← 上一步</button>` : ''}
-        ${this.gStep < 5 ? `<button class="btn-primary" style="flex:1" onclick="JingXin.Journal.gStep++;JingXin.Journal.render()" ${!this[s.field] && s.type !== 'select' ? 'disabled' : ''}>下一步 →</button>` : `<button class="btn-primary" style="flex:1" onclick="JingXin.Journal.guidedSave()">💾 保存</button>`}
+        ${this.gStep < this.totalGSteps ? `<button class="btn-primary" style="flex:1" onclick="JingXin.Journal.gStep++;JingXin.Journal.render()">下一步 →</button>` : `<button class="btn-primary" style="flex:1" onclick="JingXin.Journal.guidedSave()">✅ 完成 CBT 记录</button>`}
       </div>
-      <button class="btn-ghost" style="width:100%;margin-top:8px;color:#8A9AAA;font-size:12px" onclick="JingXin.Journal.mode='quick';JingXin.Journal.render()">回到快速模式</button>`;
+      <button class="btn-ghost" style="width:100%;margin-top:6px;color:#8A9AAA;font-size:11px" onclick="JingXin.Journal.mode='quick';JingXin.Journal.render()">回到快速模式</button>`;
   },
 
   guidedSave() {
-    const worry = this.gFact + ' | 担心: ' + this.gFear;
+    const worry = `【情境】${this.gSituation}\n【自动思维】${this.gThought}\n【情绪】${this.gEmotion}\n【扭曲】${this.gDistortion}\n【证据】${this.gEvidence}\n【平衡想法】${this.gBalanced}\n【行动】${this.gPlan}`;
+    const paragraphs = [
+      '你完成了一次完整的 CBT 记录。这是认知行为疗法的核心——不是消除焦虑，而是改变你和想法之间的关系。',
+    ];
+    if (this.gDistortion && this.gDistortion !== '不确定') {
+      paragraphs.push(`你识别出了「${this.gDistortion}」这种思维模式。光是看见它，你就已经不再是它的提线木偶。这种觉察能力是可以训练的——每做一次，你就强一分。`);
+    }
+    if (this.gBalanced) {
+      paragraphs.push(`你写下了更平衡的想法。这不是"强迫自己乐观"，而是基于证据的客观思考。原来的自动思维和新的平衡想法可以共存——但后者更接近事实。`);
+    }
+    if (this.gPlan) {
+      paragraphs.push(`你定了一个具体的小行动。「${this.gPlan.substring(0,40)}...」——不需要惊天动地，能迈出一步就够了。焦虑的反面不是平静，是行动。`);
+    }
+    paragraphs.push('CBT 不是一次性的——它是一种可以反复使用的工具。下次焦虑来的时候，你还可以再来做一次。每一次，都会比上一次更容易。');
+    this._anxietyAnalysis = paragraphs;
+
     JingXin.IPC.invoke('anxiety:save', { worry, anxietyLevel: this.level, emotions: [] });
     this.result = true; this.mode = 'quick';
     this.render();
@@ -197,6 +225,6 @@ JingXin.Journal = {
       </div>`;
   },
 
-  reset() { this.result = false; this.worry = ''; this.level = 5; this.gStep = 1; this.gFact = ''; this.gFear = ''; this.gProbability = ''; this.gAction = ''; this.gUncontrol = ''; this.render(); },
+  reset() { this.result = false; this.worry = ''; this.level = 5; this.gStep = 1; this.gSituation = ''; this.gThought = ''; this.gEmotion = ''; this.gDistortion = ''; this.gEvidence = ''; this.gBalanced = ''; this.gPlan = ''; this.render(); },
   esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 };
