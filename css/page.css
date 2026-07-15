@@ -342,3 +342,8 @@
 .done-report-emoji { font-size:2.5rem; display:block; margin-bottom:8px; }
 .done-report-title { font-size:1.1rem; font-weight:600; color:#5C4A3A; margin-bottom:8px; }
 .done-report-text { font-size:0.9rem; color:#8C7B6A; line-height:1.65; }
+
+/* === CBT Method Badge === */
+.cbt-method-badge { text-align:center; font-size:0.75rem; color:#D4916A; background:rgba(232,168,124,0.1); padding:6px 16px; border-radius:20px; display:inline-block; width:100%; margin-bottom:12px; }
+.cbt-card-tag { font-size:0.7rem; color:#B5A595; background:#FFF5EC; padding:2px 10px; border-radius:10px; }
+.cbt-card-subtitle { font-size:0.8rem; color:#B5A595; margin-bottom:12px; font-style:italic; line-height:1.4; }

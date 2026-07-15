@@ -28,22 +28,24 @@ JingXin.LightCBT = {
 
   _renderCard(el, n) {
     const cards = [
-      { title: '客观发生的事实', ph: '只描述发生的事，不带好坏评价\n\n比如：今天开会时我的方案被同事质疑了', icon: '📋' },
-      { title: '我当下冒出的消极想法', ph: '心里第一时间浮现的负面感受\n\n比如：我是不是能力不行？大家肯定觉得我很差劲', icon: '💭' },
-      { title: '更平和、客观的新视角', ph: '换一种温柔的方式看待这件事\n\n比如：同事质疑的是方案，不是我这个人。也有可能是我上次帮他，他现在想回报', icon: '🪞' },
+      { title: '客观发生的事实', sub: 'CBT 第1步：情境觉察', ph: '只描述发生的事，不带好坏评价。就像监控摄像头看到的那样。\n\n比如：今天开会时我的方案被同事质疑了', icon: '📋', tag: 'Situation' },
+      { title: '我当下冒出的消极想法', sub: 'CBT 第2步：自动思维捕捉', ph: '心里第一时间浮现的负面念头，可能很夸张也没关系——写下来才能看清它。\n\n比如：我是不是能力不行？大家肯定觉得我很差劲', icon: '💭', tag: 'Automatic Thoughts' },
+      { title: '更平和、客观的新视角', sub: 'CBT 第3步：认知重构', ph: '换一种温柔、客观的方式重新看待这件事。这不是强迫乐观，而是基于事实的重新评估。\n\n比如：同事质疑的是方案，不是我这个人。过去5次类似的方案都通过了', icon: '🪞', tag: 'Reframing' },
     ];
     const c = cards[n-1];
     el.innerHTML = `
       <div class="cbt-card-container fade-in">
+        <div class="cbt-method-badge">🧠 认知行为疗法 (CBT)</div>
         <div class="cbt-progress">
           ${[1,2,3].map(i => `<span class="cbt-dot ${i <= n ? 'active' : ''}" onclick="JingXin.LightCBT.goStep(${i})"></span>`).join('')}
         </div>
         <div class="cbt-card-item">
           <div class="cbt-card-header">
             <span class="cbt-card-icon">${c.icon}</span>
-            <span class="cbt-card-label">卡片 ${n}/3</span>
+            <span class="cbt-card-tag">${c.tag}</span>
           </div>
           <p class="cbt-card-title">${c.title}</p>
+          <p class="cbt-card-subtitle">${c.sub}</p>
           <textarea oninput="JingXin.LightCBT.card${n}=this.value" placeholder="${c.ph}" class="cbt-card-input">${this.esc(this['card'+n] || '')}</textarea>
         </div>
         <div class="cbt-card-nav">
