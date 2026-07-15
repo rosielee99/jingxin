@@ -336,3 +336,9 @@
 .report-label { font-size: 0.85rem; font-weight: 600; color: #5C4A3A; margin-bottom: 8px; }
 .report-item { font-size: 0.85rem; color: #8C7B6A; padding: 4px 0; display: flex; justify-content: space-between; }
 .report-count { color: #E8A87C; font-weight: 500; }
+
+/* === Daily Report Card === */
+.done-report { background:linear-gradient(160deg,#FFFBF8,#FFF5EC); border-radius:20px; padding:20px; margin:16px 0; text-align:center; }
+.done-report-emoji { font-size:2.5rem; display:block; margin-bottom:8px; }
+.done-report-title { font-size:1.1rem; font-weight:600; color:#5C4A3A; margin-bottom:8px; }
+.done-report-text { font-size:0.9rem; color:#8C7B6A; line-height:1.65; }

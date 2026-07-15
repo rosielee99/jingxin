@@ -104,11 +104,44 @@ JingXin.Checkin = {
   },
 
   _renderDone(el) {
+    // Generate mini report based on tags
+    const happyCount = this.selectedTags.filter(t => this.HAPPY_TAGS.includes(t)).length;
+    const annoyCount = this.selectedTags.filter(t => this.ANNOY_TAGS.includes(t)).length;
+    let reportTitle, reportText, reportEmoji;
+
+    if (happyCount > annoyCount && happyCount > 0) {
+      reportTitle = '今天的美好占了上风 ✨';
+      reportText = `你捕捉到了 ${happyCount} 件小美好${annoyCount > 0 ? '，虽然也有' + annoyCount + '件烦闷，但好的感受更强烈' : ''}。记住这种感觉——它是你情绪银行里的存款。`;
+      reportEmoji = '☀️';
+    } else if (annoyCount > happyCount && annoyCount > 0) {
+      reportTitle = '今天不容易，但你接住了 🫂';
+      reportText = `你承认了 ${annoyCount} 件烦闷的事，这需要勇气。${happyCount > 0 ? '好在你还发现了' + happyCount + '件小美好——即使在低谷，你也没有完全被淹没。' : '把烦闷写下来，它对你的控制就少了一分。今天辛苦了。'}`;
+      reportEmoji = '🌧';
+    } else if (happyCount > 0 && annoyCount > 0) {
+      reportTitle = '有晴有雨，这就是真实的一天 🌤';
+      reportText = `美好和烦闷各占一半——这才是生活的常态。你没有被情绪裹挟，而是把它们都接住了。两边的力量都在，你在中间。`;
+      reportEmoji = '🌈';
+    } else if (this.note) {
+      reportTitle = '你记下了今天的感受 📝';
+      reportText = '不一定每天都有明确的好或坏。能停下来、写下来、感受自己——这个动作本身就是在照顾自己。';
+      reportEmoji = '🌱';
+    } else {
+      reportTitle = '你今天来过，就够了 🌿';
+      reportText = '不一定非要选标签、写文字。打开这个页面、看一眼自己的情绪状态，就已经在和内心对话了。';
+      reportEmoji = '🌱';
+    }
+
     el.innerHTML = `
       <div class="done-container fade-in">
         <div class="done-stars">✨⭐💫🌟</div>
         <p class="done-msg">好好接住今天所有情绪啦</p>
-        <p class="done-sub">已经替你记下了 🌱</p>
+
+        <div class="done-report">
+          <span class="done-report-emoji">${reportEmoji}</span>
+          <p class="done-report-title">${reportTitle}</p>
+          <p class="done-report-text">${reportText}</p>
+        </div>
+
         ${this.selectedTags.length > 0 ? `<div class="done-tags">${this.selectedTags.map(t => `<span class="mini-tag">${t}</span>`).join(' ')}</div>` : ''}
       </div>`;
   },
