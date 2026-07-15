@@ -71,10 +71,34 @@ JingXin.Decision = {
     const summary = `【决定】${this.goal}\n【情绪】${this.emotion}\n【现实】${this.reality}\n【立刻做-短期】${this.pros.shortDo}\n【立刻做-长期】${this.pros.longDo}\n【不做-短期】${this.pros.shortWait}\n【不做-长期】${this.pros.longWait}`;
     JingXin.IPC.invoke('anxiety:save', { worry: summary, anxietyLevel: 5, emotions: [] });
 
+    // Generate analysis
+    const analysis = [];
+    if (this.emotion && this.reality) {
+      analysis.push('你区分了情绪感受和客观现实——这是做重要决定前最关键的一步。情绪会推着你走，但现实会告诉你边界在哪。');
+    }
+    if (this.pros.shortDo && this.pros.longDo && this.pros.shortWait && this.pros.longWait) {
+      analysis.push('你完整地分析了四个角度：立刻做和暂时不做的短期感受及长期影响。多数冲动决定的错误在于只看到了"立刻做的短期感受"——那种解脱感是真实的，但长期影响往往被忽略。');
+      // Check which side has more text
+      const doLen = (this.pros.shortDo + this.pros.longDo).length;
+      const waitLen = (this.pros.shortWait + this.pros.longWait).length;
+      if (doLen > waitLen * 1.5) {
+        analysis.push('从你写的内容来看，你对"立刻做"的思考更详细。在做决定前，试试给"暂时不做"同样多的思考空间——往往那里藏着被忽略的选项。');
+      } else if (waitLen > doLen * 1.5) {
+        analysis.push('你似乎对"暂时不做"想得更多。也许内心深处已经有了倾向——不急着做决定，本身就是一种决定。');
+      }
+    }
+    analysis.push('无论最终选择什么，7天的缓冲期是值得的。情绪峰值期间做的决定，事后后悔的概率远高于冷静期后做的决定。你已经把思考留下来了，到时候回头看，会比现在更清晰。');
+
+    const analysisHtml = analysis.map(p => `<p style="margin-bottom:10px;line-height:1.65;font-size:0.9rem;color:#8C7B6A">${p}</p>`).join('');
+
     el.innerHTML = `
       <div class="cbt-done fade-in">
         <p style="text-align:center;font-size:1.5rem;margin-bottom:8px">🧘</p>
         <p class="cbt-page-title">梳理完成</p>
+        <div class="analysis-rich" style="background:#FFFBF8;border-radius:16px;padding:16px 20px;margin:12px 0;text-align:left">
+          <p style="font-weight:600;font-size:0.9rem;color:#D4916A;margin-bottom:12px">📋 分析结果</p>
+          ${analysisHtml}
+        </div>
         <div class="decision-advice">
           <p>💡 建议先暂缓7天再下定论</p>
           <p style="font-size:0.85rem;color:#8C7B6A">持续记录情绪观察变化</p>

@@ -58,7 +58,8 @@ JingXin.LightCBT = {
 
   goStep(n) {
     if (n > 3) {
-      // Save and show done
+      // Save and generate analysis
+      this._analysis = this._generateCbtAnalysis();
       JingXin.IPC.invoke('anxiety:save', {
         worry: `【事实】${this.card1} | 【消极想法】${this.card2} | 【新视角】${this.card3}`,
         anxietyLevel: 5, emotions: []
@@ -67,6 +68,28 @@ JingXin.LightCBT = {
       return;
     }
     this.step = n; this.render();
+  },
+
+  _generateCbtAnalysis() {
+    const analysis = [];
+    if (this.card1) analysis.push('你客观地描述了发生的事实——不带评价地看清"发生了什么"，是CBT的第一步。这让你和事件之间拉开了一点距离。');
+    if (this.card2) {
+      analysis.push('你捕捉到了自动冒出的消极想法。这些念头往往是习惯性的——大脑的"快速通道"总是先往坏处想。把它们写下来，你就看到了它们的样子，而不是被它们牵着走。');
+      if (this.card3) {
+        const oldLen = this.card2.length;
+        const newLen = this.card3.length;
+        if (newLen >= oldLen * 0.8) {
+          analysis.push('你写下的新视角和原来的消极想法一样详细——这不是强迫乐观，而是真正的认知重构。你在用事实和温柔的方式，重新给自己一个解释。');
+        } else {
+          analysis.push('你试着找了一个新的视角。即使它还比较简短，但这是一个开始——每一次练习，大脑的"新通道"都会更宽阔一点。');
+        }
+      }
+    }
+    if (this.card3) {
+      analysis.push('CBT的核心不是消除消极想法，而是学会和它们对话。今天的练习就是一次对话——旧的自动思维和新视角之间的对话。你站在中间，有选择权。');
+    }
+    analysis.push('三张卡片已经帮你完成了一次认知行为疗法的记录。焦虑不是你的敌人，它是大脑在努力保护你——只是方式有点过时了。慢慢来，每一次练习都在帮你更新这套系统。');
+    return analysis;
   },
 
   _renderDone(el) {
@@ -92,6 +115,13 @@ JingXin.LightCBT = {
             </div>
           </div>
         </div>
+
+        ${this._analysis ? `
+        <div class="analysis-rich" style="background:#FFFBF8;border-radius:16px;padding:16px 20px;margin-top:16px;text-align:left">
+          <p style="font-weight:600;font-size:0.9rem;color:#D4916A;margin-bottom:12px">📋 CBT 分析</p>
+          ${this._analysis.map(p => `<p style="margin-bottom:10px;line-height:1.65;font-size:0.9rem;color:#8C7B6A">${p}</p>`).join('')}
+        </div>
+        ` : ''}
         <button class="btn-primary" onclick="JingXin.LightCBT.exit()" style="width:100%;margin-top:16px">完成</button>
       </div>`;
   },
