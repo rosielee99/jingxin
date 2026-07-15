@@ -97,7 +97,7 @@ textarea {
 input[type="text"]:focus,
 textarea:focus {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(91, 141, 238, 0.12);
+  box-shadow: 0 0 0 3px rgba(232, 168, 124, 0.12);
   outline: none;
 }
 
@@ -129,16 +129,16 @@ button {
 button:active { transform: scale(0.97); }
 
 .btn-primary {
-  background: linear-gradient(135deg, #5B8DEE, #4A7FDE);
+  background: linear-gradient(135deg, #E8A87C, #D4916A);
   color: var(--color-text-inverse);
   padding: var(--space-sm) var(--space-xl);
   border-radius: var(--radius-lg);
-  box-shadow: 0 2px 8px rgba(91, 141, 238, 0.25);
+  box-shadow: 0 2px 8px rgba(232, 168, 124, 0.25);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #4A7FDE, #3B6FCE);
-  box-shadow: 0 4px 14px rgba(91, 141, 238, 0.35);
+  background: linear-gradient(135deg, #D4916A, #D4916A);
+  box-shadow: 0 4px 14px rgba(232, 168, 124, 0.35);
   opacity: 1;
 }
 
@@ -150,7 +150,7 @@ button:active { transform: scale(0.97); }
 }
 
 .btn-secondary:hover {
-  background: rgba(91, 141, 238, 0.08);
+  background: rgba(232, 168, 124, 0.08);
   opacity: 1;
 }
 
