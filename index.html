@@ -34,22 +34,31 @@
       <div class="card-body" id="checkin-body"></div>
     </section>
 
-    <!-- ===== 日记 ===== -->
-    <section class="page-card" id="view-journal">
+    <!-- ===== 核心二：轻量CBT ===== -->
+    <section class="page-card" id="view-cbt">
       <div class="card-header">
-        <span class="card-icon" style="background:#E8F5F1">📝</span>
-        <div><h2>心情日记</h2><p class="text-muted">焦虑和开心，都值得被记录</p></div>
+        <span class="card-icon">🌿</span>
+        <div><h2>情绪轻梳理</h2><p class="text-muted">三张卡片，换个角度看</p></div>
       </div>
-      <div class="card-body" id="journal-body"></div>
+      <div class="card-body" id="cbt-body"></div>
     </section>
 
-    <!-- ===== 趋势 ===== -->
-    <section class="page-card" id="view-trends">
+    <!-- ===== 核心三：抉择冷静站 ===== -->
+    <section class="page-card" id="view-decision">
+      <div class="card-header">
+        <span class="card-icon">🧘</span>
+        <div><h2>抉择冷静站</h2><p class="text-muted">先冷静，再做重要选择</p></div>
+      </div>
+      <div class="card-body" id="decision-body"></div>
+    </section>
+
+    <!-- ===== 核心四：月度报告 ===== -->
+    <section class="page-card" id="view-report">
       <div class="card-header">
         <span class="card-icon">📊</span>
-        <div><h2>趋势</h2><p class="text-muted">看到变化，看到规律</p></div>
+        <div><h2>月度情绪报告</h2><p class="text-muted">看见自己这个月的情绪轨迹</p></div>
       </div>
-      <div class="card-body" id="trends-body"></div>
+      <div class="card-body" id="report-body"></div>
     </section>
 
     <!-- ===== Footer ===== -->
@@ -59,11 +68,12 @@
 
   </main>
 
-  <script src="js/storage.js?v=4"></script>
-  <script src="js/app.js?v=4"></script>
-  <script src="js/features/checkin.js?v=4"></script>
-  <script src="js/features/journal.js?v=4"></script>
-  <script src="js/features/trends.js?v=4"></script>
+  <script src="js/storage.js?v=5"></script>
+  <script src="js/app.js?v=5"></script>
+  <script src="js/features/checkin.js?v=5"></script>
+  <script src="js/features/light-cbt.js?v=5"></script>
+  <script src="js/features/decision.js?v=5"></script>
+  <script src="js/features/report.js?v=5"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});

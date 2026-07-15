@@ -1,11 +1,12 @@
-/* 静心 — App Shell (3 tabs) */
+/* 静心 — App Shell (4 核心) */
 window.JingXin = window.JingXin || {};
 
 JingXin.App = {
   async init() {
     if (JingXin.Checkin && JingXin.Checkin.init) await JingXin.Checkin.init();
-    if (JingXin.Journal && JingXin.Journal.init) await JingXin.Journal.init();
-    if (JingXin.Trends && JingXin.Trends.init) await JingXin.Trends.init();
+    if (JingXin.LightCBT && JingXin.LightCBT.init) await JingXin.LightCBT.init();
+    if (JingXin.Decision && JingXin.Decision.init) await JingXin.Decision.init();
+    if (JingXin.Report && JingXin.Report.init) await JingXin.Report.init();
   }
 };
 
