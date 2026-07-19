@@ -68,42 +68,91 @@ JingXin.Decision = {
 
   _renderDone(el) {
     // Save
-    const summary = `【决定】${this.goal}\n【情绪】${this.emotion}\n【现实】${this.reality}\n【立刻做-短期】${this.pros.shortDo}\n【立刻做-长期】${this.pros.longDo}\n【不做-短期】${this.pros.shortWait}\n【不做-长期】${this.pros.longWait}`;
-    JingXin.IPC.invoke('anxiety:save', { worry: summary, anxietyLevel: 5, emotions: [] });
+    JingXin.IPC.invoke('anxiety:save', {
+      worry: `【决定】${this.goal}\n【情绪】${this.emotion}\n【现实】${this.reality}\n【立刻做-短期】${this.pros.shortDo}\n【立刻做-长期】${this.pros.longDo}\n【不做-短期】${this.pros.shortWait}\n【不做-长期】${this.pros.longWait}`,
+      anxietyLevel: 5, emotions: []
+    });
 
-    // Generate analysis
-    const analysis = [];
-    if (this.emotion && this.reality) {
-      analysis.push('你区分了情绪感受和客观现实——这是做重要决定前最关键的一步。情绪会推着你走，但现实会告诉你边界在哪。');
+    const p = this.pros;
+    const doLen = (p.shortDo + p.longDo).length;
+    const waitLen = (p.shortWait + p.longWait).length;
+    const allFilled = p.shortDo && p.longDo && p.shortWait && p.longWait;
+
+    // Build rich analysis sections
+    const sections = [];
+
+    // Section 1: Emotional vs Reality
+    if (this.emotion) {
+      sections.push({
+        title: '💗 情绪在说什么',
+        text: `你感受到了："${this.emotion.substring(0, 80)}"。这些情绪是真实的——它们不是你需要压抑的东西，而是需要被看见的信号。焦虑常常伪装成"紧迫感"，让你觉得"不立刻做就来不及了"。但真正的紧急决定很少，大多数事可以等一等。`
+      });
     }
-    if (this.pros.shortDo && this.pros.longDo && this.pros.shortWait && this.pros.longWait) {
-      analysis.push('你完整地分析了四个角度：立刻做和暂时不做的短期感受及长期影响。多数冲动决定的错误在于只看到了"立刻做的短期感受"——那种解脱感是真实的，但长期影响往往被忽略。');
-      // Check which side has more text
-      const doLen = (this.pros.shortDo + this.pros.longDo).length;
-      const waitLen = (this.pros.shortWait + this.pros.longWait).length;
+    if (this.reality) {
+      sections.push({
+        title: '🔒 现实在说什么',
+        text: `你看到了现实："${this.reality.substring(0, 80)}"。这些是客观存在的约束——不因为你焦虑而改变，也不因为你忽略而消失。看清它们之后，你的决定就有了边界。在边界内做选择，比在迷雾中冲撞要安全得多。`
+      });
+    }
+
+    // Section 2: Compare the four quadrants
+    if (allFilled) {
+      let comparison = '';
+      const doSummary = [];
+      if (p.shortDo) doSummary.push(`短期来看：${p.shortDo.substring(0, 60)}`);
+      if (p.longDo) doSummary.push(`长期来看：${p.longDo.substring(0, 60)}`);
+      const waitSummary = [];
+      if (p.shortWait) waitSummary.push(`短期来看：${p.shortWait.substring(0, 60)}`);
+      if (p.longWait) waitSummary.push(`长期来看：${p.longWait.substring(0, 60)}`);
+
+      comparison += `【如果立刻做】${doSummary.join('；')}。【如果暂时不做】${waitSummary.join('；')}。`;
+
       if (doLen > waitLen * 1.5) {
-        analysis.push('从你写的内容来看，你对"立刻做"的思考更详细。在做决定前，试试给"暂时不做"同样多的思考空间——往往那里藏着被忽略的选项。');
+        comparison += `\n\n你花了更多文字描述"立刻做"——这个方向可能让你更有表达欲。但表达欲不一定是正确信号，有时候我们对"立刻做"想得多，只是因为它的短期感受更强烈。试着把"暂时不做"理解为一种主动选择而非被动拖延，你会发现它也有它的力量。`;
       } else if (waitLen > doLen * 1.5) {
-        analysis.push('你似乎对"暂时不做"想得更多。也许内心深处已经有了倾向——不急着做决定，本身就是一种决定。');
+        comparison += `\n\n你花了更多文字描述"暂时不做"——也许你的直觉已经在告诉你答案。有时候，不做决定本身就是一个成熟的决策。给自己时间、让更多信息浮现，往往比匆忙做决定更明智。`;
+      } else {
+        comparison += `\n\n你对两个方向的思考量大致相当——这说明你真的在认真地权衡。没有明显倾向不等于犹豫不决，有时候需要的就是再多一点信息、再多一点时间。`;
       }
-    }
-    analysis.push('无论最终选择什么，7天的缓冲期是值得的。情绪峰值期间做的决定，事后后悔的概率远高于冷静期后做的决定。你已经把思考留下来了，到时候回头看，会比现在更清晰。');
 
-    const analysisHtml = analysis.map(p => `<p style="margin-bottom:10px;line-height:1.65;font-size:0.9rem;color:#8C7B6A">${p}</p>`).join('');
+      sections.push({ title: '⚖️ 利弊对比', text: comparison });
+    }
+
+    // Section 3: General advice
+    if (this.emotion && /焦虑|急|来不及|担心|害怕|后悔|压力/.test(this.emotion)) {
+      sections.push({
+        title: '🧠 焦虑在给你的错觉',
+        text: '你的描述中出现了焦虑相关的词。焦虑会制造一种"假性紧迫感"——让你觉得必须马上做决定，不做就来不及了。但研究表明，人在焦虑状态下做决定，后悔率比冷静状态下高出约40%。焦虑不是你的敌人，但它不适合做决策顾问。先让情绪降下来，你的判断力会回来。'
+      });
+    }
+
+    sections.push({
+      title: '🌱 给你的建议',
+      text: '你已经完成了很多人做不到的事：在冲动和焦虑中停下来，认真地梳理了自己的感受和思考。无论最终你选择什么——立刻做，还是再等等——这个梳理的过程本身就在保护你。先暂缓7天。7天后，打开"月度报告"看看这段时间的情绪波动，再看看这个决定——到那时候，你会比现在更清楚。'
+    });
+
+    const sectionsHtml = sections.map(s => `
+      <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px dashed rgba(0,0,0,0.06)">
+        <p style="font-weight:600;font-size:0.9rem;color:#D4916A;margin-bottom:6px">${s.title}</p>
+        <p style="font-size:0.9rem;color:#8C7B6A;line-height:1.7;white-space:pre-wrap">${s.text}</p>
+      </div>
+    `).join('');
 
     el.innerHTML = `
       <div class="cbt-done fade-in">
-        <p style="text-align:center;font-size:1.5rem;margin-bottom:8px">🧘</p>
+        <p style="text-align:center;font-size:1.5rem;margin-bottom:4px">🧘</p>
         <p class="cbt-page-title">梳理完成</p>
-        <div class="analysis-rich" style="background:#FFFBF8;border-radius:16px;padding:16px 20px;margin:12px 0;text-align:left">
-          <p style="font-weight:600;font-size:0.9rem;color:#D4916A;margin-bottom:12px">📋 分析结果</p>
-          ${analysisHtml}
+        <p style="text-align:center;font-size:0.85rem;color:#B5A595;margin-bottom:16px">关于「${this.esc(this.goal.substring(0, 40))}」的思考</p>
+
+        <div class="analysis-rich" style="background:#FFFBF8;border-radius:16px;padding:16px 20px;margin-bottom:12px;text-align:left">
+          ${sectionsHtml}
         </div>
+
         <div class="decision-advice">
-          <p>💡 建议先暂缓7天再下定论</p>
+          <p style="font-weight:600">💡 建议先暂缓7天再下定论</p>
           <p style="font-size:0.85rem;color:#8C7B6A">持续记录情绪观察变化</p>
         </div>
-        <button class="btn-primary" onclick="JingXin.Decision.exit()" style="width:100%">保存本次梳理</button>
+        <button class="btn-primary" onclick="JingXin.Decision.exit()" style="width:100%;margin-top:12px">保存本次梳理记录</button>
       </div>`;
   },
 
