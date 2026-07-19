@@ -118,17 +118,49 @@ JingXin.Decision = {
       sections.push({ title: '⚖️ 利弊对比', text: comparison });
     }
 
-    // Section 3: General advice
+    // Section 3: Anxiety pattern analysis
     if (this.emotion && /焦虑|急|来不及|担心|害怕|后悔|压力/.test(this.emotion)) {
       sections.push({
-        title: '🧠 焦虑在给你的错觉',
-        text: '你的描述中出现了焦虑相关的词。焦虑会制造一种"假性紧迫感"——让你觉得必须马上做决定，不做就来不及了。但研究表明，人在焦虑状态下做决定，后悔率比冷静状态下高出约40%。焦虑不是你的敌人，但它不适合做决策顾问。先让情绪降下来，你的判断力会回来。'
+        title: '🧠 焦虑正在影响你的判断',
+        text: '你的描述中出现了焦虑相关的词语。焦虑会做三件事：1）放大短期后果，让你觉得"不立刻做就完蛋了"；2）缩小长期风险，让你忽略"做了之后会怎样"；3）制造假性紧迫感。研究表明，人在焦虑状态下做的决定，事后后悔率比冷静时高出约40%。先让情绪降下来，你的判断力会回来。'
       });
     }
 
+    // Section 4: Rich personalized suggestions
+    const suggestions = [];
+
+    // Suggestion based on what they wrote
+    if (this.emotion && this.reality) {
+      suggestions.push('你已经完成了最困难的一步：把情绪和现实分开。很多人做决定时，情绪和现实是搅在一起的——分不清"我想要"和"我应该"、"我害怕"和"确实有风险"。你把它们分开了，这个动作本身就价值巨大。');
+    }
+
+    if (allFilled) {
+      if (doLen > waitLen * 1.5) {
+        suggestions.push('你对"立刻做"思考得更深入。接下来7天里，试着每天花5分钟想一想"如果不做"——不是永远不做，只是再等等。你会注意到一些之前被忽略的角度。把它们写下来。');
+      } else if (waitLen > doLen * 1.5) {
+        suggestions.push('你对"不做"想得更多。这也许说明你内心已经有了倾向。接下来7天里，观察一下：当你想到"不做这个决定"时，身体是什么感觉？是放松还是失落？身体的感觉往往比脑子更诚实。');
+      } else {
+        suggestions.push('你在两个方向上思考很均衡——这说明你还没有被情绪完全推到一个方向。接下来7天，每天记录一下你对这个决定的感觉（1-10分），看看分数是上升还是下降。趋势会告诉你答案。');
+      }
+    }
+
+    // Keyword-specific suggestions
+    if (/工作|辞职|跳槽|离职|创业/.test(this.goal + this.emotion + this.reality)) {
+      suggestions.push('这涉及职业选择。一个实用的方法：假设你已经做了决定，想象6个月后的自己——你会在哪里、做什么、感觉如何？这个画面是最诚实的答案。');
+    }
+    if (/感情|分手|离婚|恋爱|结婚|对象/.test(this.goal + this.emotion + this.reality)) {
+      suggestions.push('这涉及感情决定。感情决定有一个特点：它不完全是理性的。给彼此一点空间——有时候距离和时间是最好的判断工具。7天后，你可能会更清楚自己是"舍不得"还是"真的想要"。');
+    }
+    if (/钱|买|投资|贷款|房租|买房/.test(this.goal + this.emotion + this.reality)) {
+      suggestions.push('这涉及财务决定。一个硬性建议：把数字算清楚。焦虑的人往往会高估或低估实际的金额——因为情绪在篡改数字。拿一张纸，把收入和支出列出来，让数字说话。');
+    }
+
+    // Universal 7-day plan
+    suggestions.push('在接下来的7天里：每天来"今日心情"签到1次，记录你对这个决定的感受变化。7天后打开"月度报告"，你会看到一条情绪曲线——它会比任何一刻的感受都更接近真相。到时候再回来看看这个决定，你会比现在更清楚。');
+
     sections.push({
-      title: '🌱 给你的建议',
-      text: '你已经完成了很多人做不到的事：在冲动和焦虑中停下来，认真地梳理了自己的感受和思考。无论最终你选择什么——立刻做，还是再等等——这个梳理的过程本身就在保护你。先暂缓7天。7天后，打开"月度报告"看看这段时间的情绪波动，再看看这个决定——到那时候，你会比现在更清楚。'
+      title: '🌱 给你的具体建议',
+      text: suggestions.join('\n\n')
     });
 
     const sectionsHtml = sections.map(s => `
