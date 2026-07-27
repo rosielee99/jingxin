@@ -347,3 +347,8 @@
 .cbt-method-badge { text-align:center; font-size:0.75rem; color:#D4916A; background:rgba(232,168,124,0.1); padding:6px 16px; border-radius:20px; display:inline-block; width:100%; margin-bottom:12px; }
 .cbt-card-tag { font-size:0.7rem; color:#B5A595; background:#FFF5EC; padding:2px 10px; border-radius:10px; }
 .cbt-card-subtitle { font-size:0.8rem; color:#B5A595; margin-bottom:12px; font-style:italic; line-height:1.4; }
+
+/* === AI Assist === */
+.ai-assist { }
+.ai-suggestion-item { transition:all 0.2s; }
+.ai-suggestion-item:hover { background:#FFE8D6 !important; transform:translateY(-1px); }
