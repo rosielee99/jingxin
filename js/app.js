@@ -7,6 +7,7 @@ JingXin.App = {
     if (JingXin.LightCBT && JingXin.LightCBT.init) await JingXin.LightCBT.init();
     if (JingXin.Decision && JingXin.Decision.init) await JingXin.Decision.init();
     if (JingXin.Report && JingXin.Report.init) await JingXin.Report.init();
+    if (JingXin.Chat && JingXin.Chat.init) await JingXin.Chat.init();
   }
 };
 
