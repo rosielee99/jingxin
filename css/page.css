@@ -366,3 +366,4 @@
 .chat-input-row textarea { flex:1; padding:10px 14px; border:1.5px solid rgba(232,168,124,0.2); border-radius:18px; font-size:0.9rem; background:#FFFBF8; resize:none; font-family:var(--font-sans); }
 .chat-input-row textarea:focus { border-color:#E8A87C; outline:none; }
 .chat-send-btn { padding:10px 20px !important; border-radius:18px !important; font-size:0.85rem !important; white-space:nowrap; }
+.ai-soothe-card { background:linear-gradient(160deg,#FFFBF8,#FFF5EC); border-radius:16px; padding:16px; margin:8px 0; border-left:3px solid #E8A87C; }

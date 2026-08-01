@@ -2,7 +2,8 @@
 window.JingXin = window.JingXin || {};
 
 JingXin.Checkin = {
-  step: 'mood', // mood → note → cat → tags → done
+  step: 'mood', // mood → note → cat → tags → done | 'aiScan'
+  aiText: '', aiResult: null, aiLoading: false,
   moodLevel: 5,
   note: '',
   category: '',
@@ -26,6 +27,7 @@ JingXin.Checkin = {
 
     switch (this.step) {
       case 'mood': this._renderMood(el); break;
+      case 'aiScan': this._renderAiScan(el); break;
       case 'note': this._renderNote(el); break;
       case 'cat': this._renderCat(el); break;
       case 'tags': this._renderTags(el); break;
@@ -52,7 +54,106 @@ JingXin.Checkin = {
             </div>
           `).join('')}
         </div>
+        <button class="btn-ghost" onclick="JingXin.Checkin.step='aiScan';JingXin.Checkin.render()" style="margin-top:20px;color:#D4916A;font-size:13px">🤖 不知道什么情绪？AI 帮你识别</button>
       </div>`;
+  },
+
+  // === AI Emotion Scanner ===
+  _renderAiScan(el) {
+    if (this.aiResult) return this._renderAiResult(el);
+    el.innerHTML = `
+      <div class="checkin-step fade-in">
+        <p class="step-label" style="font-size:1.1rem;margin-bottom:4px">🤖 AI 情绪识别</p>
+        <p class="step-hint">写下你遇到的事情，AI 帮你看出里面的情绪</p>
+        <textarea oninput="JingXin.Checkin.aiText=this.value" placeholder="比如：今天开会时被领导当众批评了，当时觉得脸上火辣辣的，回工位后一直没法专心工作，心里堵得慌..." style="min-height:120px;margin-top:12px" class="today-note">${this.esc(this.aiText)}</textarea>
+        <button class="btn-primary" onclick="JingXin.Checkin.runAiScan()" style="width:100%;margin-top:12px" ${!this.aiText||this.aiLoading?'disabled':''}>${this.aiLoading ? '⏳ AI 分析中...' : '🔍 分析情绪'}</button>
+        <button class="btn-ghost" onclick="JingXin.Checkin.aiResult=null;JingXin.Checkin.aiText='';JingXin.Checkin.step='mood';JingXin.Checkin.render()" style="width:100%;margin-top:4px">← 返回</button>
+      </div>`;
+  },
+
+  async runAiScan() {
+    if (!this.aiText.trim()) return;
+    this.aiLoading = true; this.render();
+    const apiKey = localStorage.getItem('ds_api_key');
+
+    try {
+      if (apiKey) {
+        const resp = await fetch('https://api.deepseek.com/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+          body: JSON.stringify({
+            model: 'deepseek-chat', max_tokens: 250, temperature: 0.7,
+            messages: [
+              { role: 'system', content: '你是情绪分析助手。用户描述一件事，你返回JSON：{"emotions":[{"name":"焦虑","level":7}],"positive":["做得好的地方"],"soothe":"一句安抚话术","suggest":"一个小建议"}。只返回JSON，不要其他文字。' },
+              { role: 'user', content: this.aiText }
+            ]
+          }),
+          signal: AbortSignal.timeout(15000)
+        });
+        const json = await resp.json();
+        if (json.choices) {
+          try { this.aiResult = JSON.parse(json.choices[0].message.content); } catch(e) {
+            this.aiResult = { emotions: [{name:'焦虑',level:6}], positive: ['你愿意把感受写下来'], soothe: '你的感受是真实的，也值得被认真对待。写下来本身就是在照顾自己。', suggest: '试试做几次深呼吸，然后看看情绪标签里有没有符合你感受的' };
+          }
+        }
+      } else {
+        // Mock mode
+        this._mockAiScan();
+      }
+    } catch(e) {
+      this._mockAiScan();
+    }
+    this.aiLoading = false; this.render();
+  },
+
+  _mockAiScan() {
+    var t = this.aiText || '';
+    var emotions = [];
+    if (/批评|骂|指责|当众|丢脸/.test(t)) emotions.push({name:'委屈',level:7},{name:'愤怒',level:5},{name:'尴尬',level:8});
+    if (/焦虑|担心|怕|紧张|不安/.test(t)) emotions.push({name:'焦虑',level:7});
+    if (/堵|闷|难受|说不清/.test(t)) emotions.push({name:'难受',level:6});
+    if (/没法|做不了|做不到|能力/.test(t)) emotions.push({name:'自我怀疑',level:7});
+    if (emotions.length === 0) emotions.push({name:'复杂情绪',level:5});
+
+    this.aiResult = {
+      emotions: emotions.slice(0, 4),
+      positive: ['你愿意停下来感受自己的情绪，这本身就是一种勇敢','把不舒服的经历写下来，你已经迈出了处理它的第一步'],
+      soothe: '被当众批评的确很难受——那种"所有人都在看我"的感觉是真实的。但你的价值不取决于一个人的评价，也不取决于一次事件。',
+      suggest: '如果还是觉得心里堵，试试去"梳理"模块做一次CBT五步法，把这件事拆开来看看。'
+    };
+  },
+
+  _renderAiResult(el) {
+    var r = this.aiResult;
+    var maxLvl = Math.max.apply(null, (r.emotions||[]).map(function(e){return e.level||5}));
+    var peak = (r.emotions||[]).find(function(e){return e.level===maxLvl});
+    el.innerHTML = `
+      <div class="checkin-step fade-in">
+        <p class="step-label" style="font-size:1.1rem;margin-bottom:4px">🤖 AI 看出来了</p>
+        <p class="step-hint">从你的描述中识别到的情绪</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">
+          ${(r.emotions||[]).map(function(e){return '<span class="emotion-tag selected">'+e.name+' '+e.level+'/10</span>';}).join('')}
+        </div>
+        ${peak ? '<p style="font-size:0.85rem;color:#D4916A;text-align:center;margin-bottom:8px">最强烈的感受是「'+peak.name+'」</p>' : ''}
+        <div class="ai-soothe-card">
+          <p style="font-weight:500;color:#5C4A3A;margin-bottom:4px">💛 AI 想对你说</p>
+          <p style="font-size:0.9rem;color:#8C7B6A;line-height:1.6">${r.soothe}</p>
+        </div>
+        ${(r.positive||[]).length>0 ? '<div style="margin-top:8px"><p style="font-size:0.8rem;color:#8FA889">✨ '+(r.positive||[])[0]+'</p></div>' : ''}
+        ${r.suggest ? '<p style="font-size:0.85rem;color:#D4916A;margin-top:12px;text-align:center">💡 '+r.suggest+'</p>' : ''}
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="btn-secondary" style="flex:1" onclick="JingXin.Checkin.aiResult=null;JingXin.Checkin.aiText='';JingXin.Checkin.step='mood';JingXin.Checkin.render()">返回</button>
+          <button class="btn-primary" style="flex:1" onclick="JingXin.Checkin._applyAiResult()">就用这些情绪签到</button>
+        </div>
+      </div>`;
+  },
+
+  _applyAiResult() {
+    if (this.aiResult && this.aiResult.emotions) {
+      var maxLvl = Math.max.apply(null, this.aiResult.emotions.map(function(e){return e.level||5}));
+      this.moodLevel = maxLvl;
+    }
+    this.step = 'note'; this.render();
   },
 
   selectMood(idx) {
